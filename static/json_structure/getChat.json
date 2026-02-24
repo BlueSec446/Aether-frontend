@@ -1,0 +1,13 @@
+{
+    "chat_id": 1,
+    "messages": [
+        {
+            "message_id": 1,
+            "content": "Message",
+            "timestamp": "Tue Feb 24 2026 15:36:26 GMT+0100 (Central European Standard Time)",
+            "sender": "user | contact",
+            "status": "OUTGOING_RECEIVED | ..."
+        },
+        {}
+    ]
+}
