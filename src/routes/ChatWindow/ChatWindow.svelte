@@ -10,7 +10,6 @@
     sender: 'user' | 'contact';
     content: string;
     timestamp: Date;
-    status
   }
 
   let messages: Message[] = [];
@@ -24,7 +23,7 @@
 
     // Add user message to the UI instantly
     const userMessage = inputText;
-    messages = [...messages, { role: 'user', content: userMessage, timestamp: new Date() }];
+    messages = [...messages, { sender: 'user', content: userMessage, timestamp: new Date() }];
     inputText = ''; 
     console.log(messages.pop()?.timestamp)
     
@@ -82,7 +81,7 @@
     {/if}
 
     {#each messages as msg}
-      <div class="message {msg.role}">
+      <div class="message {msg.sender}">
         <div class="bubble">{msg.content}</div>
       </div>
     {/each}
