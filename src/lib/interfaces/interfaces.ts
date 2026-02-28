@@ -1,8 +1,8 @@
-interface Message {
-    message_id: number | null;
+export interface Message {
+    messageId: string | null;
     content: string;
     sender: 'user' | 'contact';
-    timestamp: Date;
+    timestamp: Date | string;
     status: 'OUTGOING_CREATED' | 
             'OUTGOING_ATTEMPTED' | 
             'OUTGOING_RECEIVED' | 
@@ -10,20 +10,22 @@ interface Message {
             'INCOMING_READ';
 }
 
-interface Chat {
-    chat_id: number;
+export interface Chat {
+    chatId: string;
     messages: Array<Message>
 }
 
-interface Chats {
-    chat_id: number;
+export interface ChatBarElem {
+    chatId: string;
     alias: string;
-    contact_id: number;
+    contactId: string;
     last_message: Message;
 }
 
-interface Contact {
-    contact_id: number;
+export type ChatBarArray = ChatBarElem[];
+
+export interface Contact {
+    contactId: string;
     alias: string;
     onion_adress: string;
 }
