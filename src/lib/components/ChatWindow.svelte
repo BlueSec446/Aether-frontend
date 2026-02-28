@@ -3,16 +3,22 @@
 </svelte:head>
 
 <script lang="ts">
-  import { tick } from 'svelte';
+  import { onMount, tick } from 'svelte';
+  import type { Message } from '$lib/interfaces/interfaces';
+  import type { Chat } from '$lib/interfaces/interfaces';
+  import{ loadChat, postMessage } from "./chat_window"
 
-  // --- 1. STATE MANAGEMENT ---
-  interface Message {
-    sender: 'user' | 'contact';
-    content: string;
-    timestamp: Date;
-  }
+  // Receives the chatId from the parent +page.svelte file
+  export let chatId: string;
 
-  let messages: Message[] = [];
+  let chat: Chat = {chatId: chatId, messages: []};
+  let messages: Message[] = chat.messages;
+
+  onMount(async () => {
+    chat = await loadChat(chatId);
+    messages = chat.messages;
+  });
+  
   let inputText = '';
   let isLoading = false;
   let chatContainer: HTMLElement; // Used for auto-scrolling
@@ -21,30 +27,22 @@
   async function sendMessage() {
     if (!inputText.trim() || isLoading) return;
 
-    // Add user message to the UI instantly
+    // Add user message to the UI instantly with no ID
     const userMessage = inputText;
-    messages = [...messages, { sender: 'user', content: userMessage, timestamp: new Date() }];
-    inputText = ''; 
-    console.log(messages.pop()?.timestamp)
+    let newMessage: Message = {messageId: null, sender: 'user', content: userMessage, timestamp: new Date(), status: "OUTGOING_CREATED"};
+    messages = [...messages, newMessage];
+
+    inputText = '';
     
     await scrollToBottom();
 
-    try {
-      // The API Call to your Backend (e.g., your Python sidecar on port 8000)
-      const response = await fetch('http://localhost:8000/api/chat', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message: userMessage })
-      });
+    newMessage.messageId = await postMessage(chatId, newMessage);
 
-      if (!response.ok) throw new Error('API request failed');
-      
-    } catch (error) {
-      console.error('Error fetching data:', error);
-      
-    } finally {
-      await scrollToBottom();
-    }
+    messages.pop()
+    messages = [...messages, newMessage];
+
+    await scrollToBottom();
+
   }
 
   function receiveMessage() {
