@@ -14,7 +14,7 @@
   $: hasUpper = /[A-Z]/.test(password);
   $: hasLower = /[a-z]/.test(password);
   $: hasNumber = /[0-9]/.test(password);
-  $: hasSpecial = /[!@#$%^&*(),.?":{}|<>\-_]/.test(password);
+  $: hasSpecial = /[!@#€§$%^&*(),.?":{}|<>\-_~'`´]/.test(password);
 
   $: isPasswordStrong = hasLength && hasUpper && hasLower && hasNumber && hasSpecial;
 
