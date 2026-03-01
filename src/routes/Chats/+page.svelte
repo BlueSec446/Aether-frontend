@@ -15,24 +15,18 @@
 </script>
 
 <main class="desktop-window">
-  <header class="title-bar">
-    <div class="app-title">Aether</div>
-    <div class="window-controls">
-    </div>
-  </header>
-
   <div class="app-body">
     <ChatBar 
       chats={chats} 
       {activeChatId} 
-      onSelect={(id) => {
-        console.log(`Chat clicked. Received id ${id}`)
-        activeChatId = id}} 
+      onSelect={(id) => {activeChatId = id}} 
     />
 
     {#if activeChat}
       {#key activeChatId}
-        <ChatWindow chatId={activeChat.chatId} />
+        <ChatWindow 
+          chatId={activeChat.chatId} 
+          alias={activeChat.alias}/>
       {/key}
     {/if}
   </div>
@@ -72,21 +66,13 @@
 
   .app-title {
     font-weight: bold;
-    font-family: 'Comic Sans MS', cursive, sans-serif; /* Sketch feel */
+    color: var(--color-text-dark);
   }
 
   .window-controls {
     display: flex;
     gap: 0.5rem;
     -webkit-app-region: no-drag;
-  }
-
-  .window-controls .circle {
-    width: 14px;
-    height: 14px;
-    border-radius: 50%;
-    border: 1px solid black;
-    background-color: transparent;
   }
 
   .app-body {
