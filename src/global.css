@@ -97,6 +97,10 @@ input::placeholder, textarea::placeholder {
   color: var(--color-text-muted);
 }
 
+input:focus::placeholder, textarea:focus::placeholder {
+  color: transparent; /* makes the default text dissapear */
+}
+
 /* --- 7. UTILITY CLASSES (Based on Mockups) --- */
 
 /* For light panels like the Login Box or New Chat Modal */

@@ -1,20 +1,26 @@
 <svelte:head>
-  <title>Login</title>
+  <title>Register</title>
 </svelte:head>
 
 <script lang="ts">
-  import { postLogin } from "./login";
-
+  import { postRegister } from "./register"
+   
   let username = "";
   let password = "";
-  $: isValid = username.length !== 0 && password.length !== 0;
+  let confirmPassword = "";
+
+  // Reactively checks that no fields are empty AND the password is strong AND both passwords match
+  $: isValid = 
+    username.trim().length > 0
+    password.length > 0 && 
+    password === confirmPassword;
 </script>
 
 <div class="auth-container">
   <form class="auth-form">
     
     <div class="form-header">
-      <h2>Login</h2>
+      <h2>Register</h2>
       <div class="orange-divider"></div>
     </div>
 
@@ -36,28 +42,42 @@
         type="password" 
         bind:value={password} 
         placeholder="******************" 
-        autocomplete="current-password" 
+        autocomplete="new-password" 
       />
+    </div>
+
+    <div class="form-group">
+      <label for="confirm-password">Confirm Password</label>
+      <input 
+        id="confirm-password" 
+        type="password" 
+        bind:value={confirmPassword} 
+        placeholder="******************" 
+        autocomplete="new-password" 
+      />
+    </div>
+
+    <div class="warning-text">
+      <strong>Warning:</strong> <p>Passwords cannot be recovered or reset.</p><p>Please store it safely!</p>
     </div>
 
     <div class="button-container">
       <button 
         disabled={!isValid} 
-        on:click|preventDefault={() => postLogin(username, password)}
+        on:click|preventDefault={() => postRegister(username, password)}
       >
-        Login
+        Register
       </button>
     </div>
 
     <div class="link-container">
-      <a href="/register">Create an account</a>
+      <a href="/login">Already have an account? Login</a>
     </div>
 
   </form>
 </div>
 
 <style>
-  /* Centers the form in the absolute middle of the screen */
   .auth-container {
     display: flex;
     justify-content: center;
@@ -66,16 +86,14 @@
     background-color: var(--color-bg-main); 
   }
 
-  /* Constrains the form width to match the mockup */
   .auth-form {
     width: 100%;
     max-width: 380px;
     display: flex;
     flex-direction: column;
-    gap: 1.5rem; /* Creates even spacing between all elements */
+    gap: 1.5rem; 
   }
 
-  /* Header Styling */
   .form-header h2 {
     color: var(--color-text-dark);
     font-size: 1.4rem;
@@ -83,14 +101,12 @@
     margin-bottom: 0.3rem;
   }
 
-  /* The solid orange line under the title */
   .orange-divider {
     height: 2px;
     width: 100%;
     background-color: var(--color-primary);
   }
 
-  /* Input Group Styling */
   .form-group {
     display: flex;
     flex-direction: column;
@@ -102,9 +118,6 @@
     color: var(--color-text-dark);
   }
 
-  /* Notice we don't need to style the <input> because your global.css handles it! */
-
-  /* Button & Link Centering */
   .button-container {
     display: flex;
     justify-content: center;
@@ -112,7 +125,7 @@
   }
 
   .button-container button {
-    width: 140px; /* Gives the button a nice, clickable width */
+    width: 140px; 
     font-size: 1.1rem;
   }
 
