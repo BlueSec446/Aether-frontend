@@ -184,6 +184,7 @@
   }
 
   .chat-item {
+    position: relative;
     width: 100%;
     background-color: var(--color-bg-panel);
     color: var(--color-text-dark);
@@ -201,5 +202,18 @@
   .chat-item.active {
     background-color: var(--color-secondary); 
     color: var(--color-text-light);
+  }
+
+  .unread-dot {
+    width: 12px;
+    height: 12px;
+    background-color: var(--color-primary);
+    border-radius: 50%;
+    
+    /* Absolute positioning to pin it to the right side of the button */
+    position: absolute;
+    right: 1.5rem; /* Keeps it perfectly aligned on the right edge */
+    top: 50%;
+    transform: translateY(-50%);
   }
 </style>
