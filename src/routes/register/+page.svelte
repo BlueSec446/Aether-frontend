@@ -9,9 +9,19 @@
   let password = "";
   let confirmPassword = "";
 
+  // --- PASSWORD POLICY CHECKS ---
+  $: hasLength = password.length >= 8;
+  $: hasUpper = /[A-Z]/.test(password);
+  $: hasLower = /[a-z]/.test(password);
+  $: hasNumber = /[0-9]/.test(password);
+  $: hasSpecial = /[!@#$%^&*(),.?":{}|<>\-_]/.test(password);
+
+  $: isPasswordStrong = hasLength && hasUpper && hasLower && hasNumber && hasSpecial;
+
   // Reactively checks that no fields are empty AND the password is strong AND both passwords match
   $: isValid = 
-    username.trim().length > 0
+    username.trim().length > 0 &&
+    isPasswordStrong &&
     password.length > 0 && 
     password === confirmPassword;
 </script>
@@ -56,6 +66,14 @@
         autocomplete="new-password" 
       />
     </div>
+
+    <ul class="password-hints">
+      <li class:met={hasLength}>At least 8 characters</li>
+      <li class:met={hasUpper}>One uppercase letter</li>
+      <li class:met={hasLower}>One lowercase letter</li>
+      <li class:met={hasNumber}>One number</li>
+      <li class:met={hasSpecial}>One special character</li>
+    </ul>
 
     <div class="warning-text">
       <strong>Warning:</strong> <p>Passwords cannot be recovered or reset.</p><p>Please store it safely!</p>
@@ -143,5 +161,57 @@
   .link-container a:hover {
     color: var(--color-primary);
     text-decoration: underline;
+  }
+
+  /* Styling for the password hints */
+  .password-hints {
+    list-style-type: none;
+    padding: 0;
+    margin: -0.5rem 0 0.5rem 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+  }
+
+  .password-hints li {
+    font-size: 0.8rem;
+    color: var(--color-text-muted);
+    transition: color var(--transition-speed) ease;
+    display: flex;
+    align-items: center;
+  }
+
+  /* Adds a tiny empty circle bullet point */
+  .password-hints li::before {
+    content: "○";
+    margin-right: 0.4rem;
+    font-size: 0.7rem;
+  }
+
+  /* When the requirement is met, it changes color and icon! */
+  .password-hints li.met {
+    color: var(--color-secondary); /* Uses your Teal color */
+    text-decoration: line-through; /* Crosses it off the list */
+    text-decoration-color: var(--color-primary);
+    text-decoration-thickness: 1.1;
+    opacity: 0.8;
+  }
+
+  /* Changes the empty circle to a solid dot/checkmark when met */
+  .password-hints li.met::before {
+    content: "●"; 
+    color: var(--color-primary);
+  }
+
+  /* --- Styling for the Warning --- */
+  .warning-text {
+    font-size: 0.85rem;
+    color: var(--color-primary);
+    text-align: center;
+    margin-top: -0.5rem;
+    font-size: 1.1;
+    line-height: 1.4;
+    padding: 0.5rem;
+    border-radius: var(--border-radius-sm);
   }
 </style>
