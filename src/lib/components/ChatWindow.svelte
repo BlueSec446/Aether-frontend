@@ -163,6 +163,14 @@
     {#each messages as msg}
       <div class="message {msg.sender}">
         <div class="bubble">{msg.content}</div>
+        {#if msg.sender === "user"}
+            {#if msg.status === "OUTGOING_RECEIVED"}
+              <div class="status-symbol">&#10004</div>
+            {/if}
+            {#if msg.status !== "OUTGOING_RECEIVED"}
+              <div class="status-symbol">&#9634</div>
+            {/if}
+        {/if}
       </div>
     {/each}
   </div>
@@ -295,6 +303,7 @@
   .message {
     display: flex;
     width: 100%;
+    align-items: flex-end;
   }
 
   .message.user {
@@ -325,6 +334,12 @@
     background-color: var(--color-secondary); /* Replaced #124050 */
     color: var(--color-text-light); /* Replaced white */
     border-bottom-left-radius: var(--border-radius-sm); /* Replaced 4px */
+  }
+
+  .status-symbol {
+    color: var(--color-primary);
+    font-size: 1.5rem;
+    margin-left: 0.5rem;
   }
 
   .typing {
