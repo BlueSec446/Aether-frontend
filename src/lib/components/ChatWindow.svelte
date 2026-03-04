@@ -186,7 +186,7 @@
     disabled={isLoading}
     ></textarea>
     <button class="send-button" on:click={sendMessage} disabled={isLoading || !inputText.trim()}>
-    <img src="/icons/Send_Icon.png" alt="Send">
+    <img src='./src/lib/assets/Send_Icon.png' alt="Send">
     </button>
   </div>
 </div>

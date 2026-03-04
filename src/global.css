@@ -33,7 +33,7 @@ body, html {
   height: 100vh;
   width: 100vw;
   /* Use a clean sans-serif font for the app interface */
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  font-family: Montserrat, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial;
   
   /* Apply the requested background and default text color */
   background-color: var(--color-bg-main);
