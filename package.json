@@ -34,7 +34,7 @@
 		"typescript": "^5.9.3",
 		"vite": "^7.3.1",
 		"vitest": "^4.0.18",
-		"wait-on": "^9.0.3"
+		"wait-on": "^9.0.4"
 	},
 	"dependencies": {
 		"svelte-use-form": "^3.0.1"
