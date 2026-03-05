@@ -7,6 +7,21 @@
   export let onSelect: (id: string) => void = () => {};
   export let onAddChat: (alias: string, onion: string) => void = () => {};
 
+  // User Account Information
+  export let userAlias: string = 'MyLocalAlias'; 
+  export let userOnion: string = 'vww6yba14bd7szmgncyruucpgfkqahzddi37ktceo3ah7ngmcopnpyyd.onion';
+  let isAccountModalOpen = false;
+
+  function openAccountInfo(event: MouseEvent) {
+    event.stopPropagation();
+    isAccountModalOpen = true;
+    isModalOpen = false; // Closes the "New Chat" modal if it is open
+  }
+
+  function closeAccountInfo() {
+    isAccountModalOpen = false;
+  }
+
   // Logic for new Contact Form
   let isModalOpen = false;
   let newAlias = '';
@@ -15,6 +30,7 @@
   function openModal(event: MouseEvent) {
     event.stopPropagation(); // Prevents the clickOutside from instantly triggering
     isModalOpen = true;
+    isAccountModalOpen = false;
   }
 
   function closeModal() {
@@ -48,10 +64,32 @@
 <aside class="chatbar">
   <div class="header">
     <h2>Chats</h2>
-    <button class="add-btn" on:click={openModal} title="New Chat">
-      +
-    </button>
+    <div class="header-actions">
+      <button class="account" on:click={openAccountInfo} title="Account">
+        <img src='./src/lib/assets/user_icon.svg' alt="Account">
+      </button>
+      <button class="add-btn" on:click={openModal} title="New Chat">
+        +
+      </button>
+    </div>
   </div>
+
+  {#if isAccountModalOpen}
+    <div class="account-info-modal" use:clickOutside={closeAccountInfo}>
+      <h3>Account Info</h3>
+      <div class="orange-divider"></div>
+
+      <div class="info-group">
+        <label for="info-value">My Alias</label>
+        <div id= "info-value" class="info-value">{userAlias}</div>
+      </div>
+
+      <div class="info-group">
+        <label for="onion">My Onion Address</label>
+        <div id="onion" class="info-value onion-text">{userOnion}</div>
+      </div>
+    </div>
+  {/if}
 
   {#if isModalOpen}
     <div class="new-chat-modal" use:clickOutside={closeModal}>
@@ -114,20 +152,89 @@
     height: 40px;
   }
 
+  .header-actions {
+    display: flex;
+    align-items: right;
+    gap: 0.8rem; 
+    margin-right: 1rem;
+    height: 100%; 
+  }
+
+  .account {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%; 
+  }
+
+  .account img{
+    height: 60%;
+    max-height: 100%;
+    width: auto;
+    object-fit: contain;
+  }
+
   .add-btn {
     background: transparent;
+  }
+  
+  .account-info-modal {
+    position: absolute;
+    top: 50px;
+    left: 80%;
+    width: 510px;
+    color: var(--color-text-dark);
+    background-color: var(--color-bg-panel);
+    border: 1px solid var(--color-text-dark);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    padding: 1.5rem;
+    z-index: 100;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .info-group {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 1rem;
+  }
+
+  .info-group label {
+    font-size: 0.85rem;
+    color: var(--color-text-dark);
+    margin-bottom: 0.2rem;
+  }
+
+  .info-value {
+    padding: 0.5rem;
+    background-color: rgba(0, 0, 0, 0.1);
+    border: 1px solid var(--color-text-muted);
+    color: var(--color-text-muted);
+    background-color: white;
+    border-radius: 0;
+  }
+
+  .onion-text {
+    font-family: monospace;
+    font-size: 0.8rem;
+    word-break: break-all;
+    line-height: 1.4;
   }
 
   .new-chat-modal {
     position: absolute;
-    top: 50px; /* Aligns perfectly right under the header */
-    left: 80%; /* Pushes it out over the chat window */
+    top: 50px;
+    left: 80%;
     width: 380px;
     background-color: var(--color-bg-panel);
     border: 1px solid var(--color-text-dark);
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
     padding: 1.5rem;
-    z-index: 100; /* Ensures it floats above everything */
+    z-index: 100;
     display: flex;
     flex-direction: column;
   }
@@ -139,7 +246,6 @@
     font-weight: normal;
   }
 
-  /* The orange line from the mockup */
   .orange-divider {
     height: 2px;
     background-color: var(--color-primary);
@@ -161,11 +267,11 @@
   .form-group input {
     padding: 0.5rem;
     border: 1px solid var(--color-text-muted);
-    border-radius: 0; /* Match the flat, sharp look in the mockup */
+    border-radius: 0;
   }
 
   .submit-btn {
-    align-self: flex-start; /* Aligns the button to the left */
+    align-self: flex-start;
     background-color: var(--color-primary);
     color: var(--color-text-light);
     padding: 0.5rem 1.5rem;
