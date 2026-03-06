@@ -1,0 +1,123 @@
+/* --- 1. CSS VARIABLES (THEME) --- */
+:root {
+  /* Core Palette */
+  --color-primary: #fd6541;   /* Orange / Coral (User Bubbles, Login Button, Accents) */
+  --color-secondary: #124050; /* Dark Teal (Headers, Bot Bubbles, Active Menu Items) */
+  
+  /* Backgrounds */
+  --color-bg-main: #D0D0D0;   /* Main App Background */
+  --color-bg-panel: #e5e7eb;  /* Light Grey for Modals, Chat List, and Inputs */
+  --color-bg-white: #ffffff;
+  
+  /* Text Colors */
+  --color-text-light: #ffffff; /* Text on Teal, Orange, and Dark Grey */
+  --color-text-dark: #333333;  /* Text on Light Grey panels */
+  --color-text-muted: #6b7280; /* Placeholders and secondary text */
+
+  /* UI Measurements */
+  --border-radius-sm: 4px;
+  --border-radius-md: 8px;
+  --border-radius-lg: 12px;
+  --transition-speed: 0.2s;
+}
+
+/* --- 2. GLOBAL RESET --- */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* --- 3. BASE STYLES --- */
+body, html {
+  height: 100vh;
+  width: 100vw;
+  /* Use a clean sans-serif font for the app interface */
+  font-family: Montserrat, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial;
+  
+  /* Apply the requested background and default text color */
+  background-color: var(--color-bg-main);
+  color: var(--color-text-light);
+  
+  /* Prevents the whole app window from scrolling (Electron standard) */
+  overflow: hidden; 
+}
+
+/* --- 4. TYPOGRAPHY --- */
+h1, h2, h3, h4, h5, h6 {
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+}
+
+/* --- 5. GLOBAL BUTTONS --- */
+button {
+  background-color: var(--color-primary);
+  color: var(--color-text-light);
+  border: none;
+  border-radius: var(--border-radius-md);
+  padding: 0.6rem 1.2rem;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color var(--transition-speed) ease, transform var(--transition-speed) ease;
+}
+
+/* Smooth hover pop effect */
+button:hover:not(:disabled) {
+  filter: brightness(1.1); /* Slightly brightens the orange */
+  transform: scale(1.03);
+}
+
+button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* --- 6. GLOBAL INPUTS & TEXTAREAS --- */
+input, textarea {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid #9ca3af;
+  border-radius: var(--border-radius-sm);
+  background-color: var(--color-bg-white);
+  color: var(--color-text-dark);
+  font-family: inherit;
+  font-size: 1rem;
+  outline: none;
+  transition: border-color var(--transition-speed) ease, box-shadow var(--transition-speed) ease;
+}
+
+/* Focus state using the primary orange color */
+input:focus, textarea:focus {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 2px rgba(253, 101, 65, 0.2); /* Soft orange glow */
+}
+
+input::placeholder, textarea::placeholder {
+  color: var(--color-text-muted);
+}
+
+input:focus::placeholder, textarea:focus::placeholder {
+  color: transparent; /* makes the default text dissapear */
+}
+
+/* --- 7. UTILITY CLASSES (Based on Mockups) --- */
+
+/* For light panels like the Login Box or New Chat Modal */
+.panel-light {
+  background-color: var(--color-bg-panel);
+  color: var(--color-text-dark);
+  border-radius: var(--border-radius-md);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+}
+
+/* For text that specifically needs to be orange (like the "Delete" button in the menu) */
+.text-primary {
+  color: var(--color-primary) !important;
+}
+
+/* For secondary elements that need the teal color */
+.bg-secondary {
+  background-color: var(--color-secondary) !important;
+  color: var(--color-text-light);
+}

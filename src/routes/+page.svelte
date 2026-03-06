@@ -1,5 +1,7 @@
 <script lang="ts">
-  import Chats from "./Chats/Chats.svelte";
+  import { goto } from "$app/navigation";
+
+  goto("/login");
 </script>
 
-<a href="/Login">Login</a> 
+

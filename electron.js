@@ -1,6 +1,8 @@
-import { app, BrowserWindow } from 'electron';
+import { app, BrowserWindow, Menu } from 'electron';
 import path from 'path';
 import { fileURLToPath } from 'url';
+
+app.disableHardwareAcceleration(); //For dev in wsl (no access to GPU)
 
 // Fix for ES Modules (since we're using "type": "module")
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -11,6 +13,9 @@ function createWindow() {
   mainWindow = new BrowserWindow({
     width: 1200,
     height: 800,
+    
+    icon: path.join(__dirname, 'src', 'lib', 'assets',  'icon.png'),
+  
     webPreferences: {
       nodeIntegration: true, // Be careful with security here later!
       contextIsolation: false,
@@ -28,7 +33,10 @@ function createWindow() {
   }
 }
 
-app.whenReady().then(createWindow);
+app.whenReady().then(() => {
+  Menu.setApplicationMenu(null);
+  createWindow();
+});
 
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') app.quit();
