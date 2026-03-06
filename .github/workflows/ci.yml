@@ -1,0 +1,35 @@
+name: Continuous Integration
+
+on:
+  push:
+    branches-ignore:
+      - main
+    paths-ignore:
+      - '**.md'
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  frontend-checks:
+    name: Frontend Lint & Test
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Lint with ESLint & Prettier
+        run: npm run lint
+
+      - name: Run Frontend Tests (Jest)
+        run: npm run test
