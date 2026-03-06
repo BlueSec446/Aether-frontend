@@ -3,7 +3,7 @@
 </svelte:head>
 
 <script lang="ts">
-  import { postLogin } from "./login";
+  import { postLogin } from "../log/login";
 
   let username = "";
   let password = "";
