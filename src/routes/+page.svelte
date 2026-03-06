@@ -1,5 +1,5 @@
 <script lang="ts">
-  import Chat from "./ChatWindow/Chat.svelte";
+  import Chats from "./Chats/Chats.svelte";
 </script>
 
-<Chat />
+<a href="/Login">Login</a> 
