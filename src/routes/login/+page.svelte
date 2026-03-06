@@ -1,12 +1,13 @@
 <svelte:head>
-  <title>Login</title>
+	<title>Login</title>
 </svelte:head>
 
 <script lang="ts">
-  import { postLogin } from "../log/login";
+  import {postLogin} from "./login"
 
   let username = "";
   let password = "";
+
   $: isValid = username.length !== 0 && password.length !== 0;
 </script>
 
@@ -53,7 +54,7 @@
       <a href="/register">Create an account</a>
     </div>
 
-  </form>
+</form>
 </div>
 
 <style>
