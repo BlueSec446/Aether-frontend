@@ -10,7 +10,7 @@ export type MessageStatus =
 
 export interface Message {
     id: number;  
-    sender_ontact_id: number | null;
+    sender_contact_id: number | null;
     content: string;
     timestamp: string;
     status: MessageStatus;
@@ -27,7 +27,7 @@ export interface Chat {
 export type ChatBarArray = Chat[];
 
 export interface Contact {
-    contact_id: string;
+    contact_id: number;
     alias: string;
     onion_adress: string;
 }
