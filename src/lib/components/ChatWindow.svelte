@@ -4,20 +4,16 @@
 
 <script lang="ts">
   import { onMount, tick } from 'svelte';
-  import type { Message } from '$lib/interfaces/interfaces';
-  import type { Chat } from '$lib/interfaces/interfaces';
+  import type { Message, Chat } from '$lib/interfaces/objects';
   import{ loadChat, postMessage } from "./chat_window"
 
   // Receives the chatId from the parent +page.svelte file
-  export let chatId: string;
-  export let alias: string;
+  export let chat: Chat;
 
-  let chat: Chat = {chatId: chatId, messages: []};
-  let messages: Message[] = chat.messages;
+  let messages: Message[] = [];
 
   onMount(async () => {
-    chat = await loadChat(chatId);
-    messages = chat.messages;
+    messages = await loadChat(chat.chat_id);
   });
   
   let inputText = '';
@@ -32,7 +28,7 @@
 
     // Add user message to the UI instantly with no ID
     const userMessage = inputText;
-    let newMessage: Message = {messageId: null, sender: 'user', content: userMessage, timestamp: new Date(), status: "OUTGOING_CREATED"};
+    let newMessage: Message = {id: 0, sender_contact_id: null, content: userMessage, timestamp: new Date().toDateString(), status: "OUTGOING_CREATED"};
     messages = [...messages, newMessage];
 
     inputText = '';
@@ -43,7 +39,7 @@
     
     await scrollToBottom();
 
-    newMessage.messageId = await postMessage(chatId, newMessage);
+    newMessage.id = await postMessage(chat.chat_id, newMessage);
 
     messages.pop()
     messages = [...messages, newMessage];
@@ -134,7 +130,7 @@
 
 <div class="chat-layout">
   <div class="header">
-    <h3>{alias}</h3>
+    <h3>{chat.title}</h3>
 
     <div class="menu-container" use:clickOutside={closeMenu}>
       <button class="menu-btn" on:click={toggleMenu} title="Menu">
@@ -146,7 +142,7 @@
           <button on:click={handleChangeAlias}>Change Alias</button>
           <button on:click={handleExportChat}>Export Chat</button>
           <button on:click={handleClearChat}>Clear Chat</button>
-          <button class="delete-btn" on:click={handleDeleteContact}>Delete</button>
+          <button class="delete-btn" on:click={handleDeleteContact}>Delete Contact</button>
         </div>
       {/if}
     </div>
@@ -161,17 +157,21 @@
     {/if}
 
     {#each messages as msg}
-      <div class="message {msg.sender}">
-        <div class="bubble">{msg.content}</div>
-        {#if msg.sender === "user"}
+      {#if msg.sender_contact_id === null}
+        <div class="message user">
+          <div class="bubble">{msg.content}</div>
             {#if msg.status === "OUTGOING_RECEIVED"}
               <div class="status-symbol">&#10004</div>
             {/if}
             {#if msg.status !== "OUTGOING_RECEIVED"}
               <div class="status-symbol">&#9634</div>
             {/if}
-        {/if}
-      </div>
+        </div>
+      {:else}
+        <div class="message contact">
+          <div class="bubble">{msg.content}</div>
+        </div>
+      {/if}
     {/each}
   </div>
   
@@ -258,7 +258,7 @@
     border: 1px solid var(--color-text-dark);
     display: flex;
     flex-direction: column;
-    min-width: 140px;
+    min-width: 145px;
     z-index: 50; /* Ensures it sits on top of the chat messages */
   }
 

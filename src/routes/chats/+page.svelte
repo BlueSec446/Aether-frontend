@@ -1,17 +1,17 @@
 <script lang="ts">
     import ChatBar from '$lib/components/ChatBar.svelte';
     import ChatWindow from '$lib/components/ChatWindow.svelte';
-    import type { ChatBarArray } from '$lib/interfaces/interfaces';
+    import type { ChatBarArray } from '$lib/interfaces/objects';
     import type { PageData } from './$types';
 
     // Loaded by the load function in +page.ts
     export let data: PageData;
     let chats: ChatBarArray = data.chats;
 
-    let activeChatId = "chat_001";
+    let activeChatId = 1;
 
     // Reactive statement to find the currently selected chat's name
-    $: activeChat = chats.find(c => c.chatId === activeChatId);
+    $: activeChat = chats.find(c => c.chat_id === activeChatId);
 </script>
 
 <main class="desktop-window">
@@ -25,8 +25,7 @@
     {#if activeChat}
       {#key activeChatId}
         <ChatWindow 
-          chatId={activeChat.chatId} 
-          alias={activeChat.alias}/>
+          chat={activeChat}/>
       {/key}
     {/if}
   </div>

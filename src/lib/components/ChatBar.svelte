@@ -1,10 +1,10 @@
 <script lang="ts">
-  import type { ChatBarArray } from '$lib/interfaces/interfaces';
+  import type { ChatBarArray } from '$lib/interfaces/objects';
 
   export let chats: ChatBarArray = [];
-  export let activeChatId: string = '';
+  export let activeChatId: number = 0;
 
-  export let onSelect: (id: string) => void = () => {};
+  export let onSelect: (id: number) => void = () => {};
   export let onAddChat: (alias: string, onion: string) => void = () => {};
 
   // User Account Information
@@ -120,9 +120,9 @@
     {#each chats as chat}
       <button 
         class="chat-item" 
-        class:active={chat.chatId === activeChatId}
-        on:click={() => onSelect(chat.chatId)} >
-        <span class="alias">{chat.alias}</span>
+        class:active={chat.chat_id === activeChatId}
+        on:click={() => onSelect(chat.chat_id)} >
+        <span class="alias">{chat.title}</span>
         
         {#if chat.last_message && chat.last_message.status === 'INCOMING_UNREAD'}
           <span class="unread-dot"></span>

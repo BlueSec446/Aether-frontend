@@ -1,30 +1,20 @@
-import { apiCall } from "$lib/api";
-import type { Message } from "$lib/interfaces/interfaces";
-import type { GetOneChat, PostMessage } from "$lib/interfaces/response_objects";
+import type { Message } from "$lib/interfaces/objects";
+import type {  } from "$lib/interfaces/response_objects";
 import { mockGetOneChatResponse } from "$lib/mock_data";
 
-export async function loadChat(chatId: string){
-    return mockGetOneChatResponse.chat;
+export async function loadChat(chatId: number){
+    return mockGetOneChatResponse;
 
-    const responseJson = await apiCall<GetOneChat>(`/chat/${chatId}`);
+    const responseJson = await window.frontendAPI.getMessages(chatId);
 
-    return responseJson.chat;
+    return responseJson;
 }
 
-export async function postMessage(chatId: string, message: Message) {
+export async function postMessage(chatId: number, message: Message) {
     let content = message.content;
     let timestamp = message.timestamp.toString();
 
-    const responseJson = await apiCall<PostMessage>("/messages", {
-        method: "POST",
-        body: JSON.stringify({
-            chat_id: chatId,
-            message: {
-                content: content,
-                timestamp: timestamp
-            }
-        })
-    });
+    const responseJson = await window.frontendAPI.sendMessage(chatId, content=message.content);
 
-    return responseJson.messageId;
+    return responseJson.message_id;
 }
