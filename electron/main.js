@@ -4,7 +4,6 @@ import { fileURLToPath } from 'url';
 
 app.disableHardwareAcceleration(); //For dev in wsl (no access to GPU)
 
-// Fix for ES Modules (since we're using "type": "module")
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 let mainWindow;
@@ -17,8 +16,9 @@ function createWindow() {
     icon: path.join(__dirname, 'src', 'lib', 'assets',  'icon.png'),
   
     webPreferences: {
-      nodeIntegration: true, // Be careful with security here later!
-      contextIsolation: false,
+      nodeIntegration: false,
+      contextIsolation: true,
+      preload: path.join(__dirname, 'preload.js') //Injects the context bridge to the backend
     },
   });
 
