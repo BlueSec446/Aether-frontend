@@ -6,7 +6,7 @@
 
     // Loaded by the load function in +page.ts
     export let data: PageData;
-    let chats: ChatBarArray = data.chats;
+    let chats: ChatBarArray = data.chats ?? []; // If undefined default to []
 
     let activeChatId = 1;
 
