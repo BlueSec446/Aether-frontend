@@ -34,7 +34,7 @@ function createWindow() {
 }
 
 app.whenReady().then(() => {
-  Menu.setApplicationMenu(null);
+  //Menu.setApplicationMenu(null); // Disable Optionsbar. Disabled for dev to access console
   createWindow();
 });
 
