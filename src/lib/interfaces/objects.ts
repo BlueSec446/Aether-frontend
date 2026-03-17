@@ -29,3 +29,8 @@ export interface Contact {
     alias: string;
     onion_adress: string;
 }
+
+export interface UserProfile {
+    alias: string;
+    onion_address: string;
+}

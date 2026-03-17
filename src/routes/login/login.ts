@@ -1,4 +1,4 @@
-import type { AuthResponse } from '$lib/interfaces/response_objects';
+import { userStore } from "$lib/stores/user_store";
 
 export async function postLogin(username: string, password: string) {
     // BACKEND: Post Login Function
@@ -8,7 +8,8 @@ export async function postLogin(username: string, password: string) {
      * if (!responseJson.status == 200){
      *        //Insert Errorhandeling
      * } else {
-     * goto("/chats"); // Open Chats
+     *    userStore.setUser(username, responseJson.onion_adress);
+     *    goto("/chats"); // Open Chats
      * }
     */
 }

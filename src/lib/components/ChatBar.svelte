@@ -1,15 +1,14 @@
 <script lang="ts">
-  import type { ChatBarArray } from '$lib/interfaces/objects';
+  import type { Chat } from '$lib/interfaces/objects';
+  import { userStore } from '$lib/stores/user_store';
 
-  export let chats: ChatBarArray = [];
+  export let chats: Chat[] = [];
   export let activeChatId: number = 0;
 
   export let onSelect: (id: number) => void = () => {};
   export let onAddChat: (alias: string, onion: string) => void = () => {};
 
   // User Account Information
-  export let userAlias: string = 'MyLocalAlias'; 
-  export let userOnion: string = 'vww6yba14bd7szmgncyruucpgfkqahzddi37ktceo3ah7ngmcopnpyyd.onion';
   let isAccountModalOpen = false;
 
   function openAccountInfo(event: MouseEvent) {
@@ -81,12 +80,12 @@
 
       <div class="info-group">
         <label for="info-value">My Alias</label>
-        <div id= "info-value" class="info-value">{userAlias}</div>
+        <div id= "info-value" class="info-value">{$userStore.alias}</div>
       </div>
 
       <div class="info-group">
         <label for="onion">My Onion Address</label>
-        <div id="onion" class="info-value onion-text">{userOnion}</div>
+        <div id="onion" class="info-value onion-text">{$userStore.onion_address}</div>
       </div>
     </div>
   {/if}
