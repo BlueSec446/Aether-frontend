@@ -1,4 +1,4 @@
-import { contextBridge } from 'electron';
+const { contextBridge } = require('electron');
 
 const API_KEY = process.env.AETHER_API_KEY; 
 const API_BASE_URL = 'http://127.0.0.1:5000/api/v1';
