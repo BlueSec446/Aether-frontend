@@ -7,6 +7,7 @@
 
   let username = "";
   let password = "";
+  let isLoading = false;
 
   $: isValid = username.length !== 0 && password.length !== 0;
 </script>
@@ -43,8 +44,8 @@
 
     <div class="button-container">
       <button 
-        disabled={!isValid} 
-        on:click|preventDefault={() => postLogin(username, password)}
+        disabled={!isValid && isLoading} 
+        on:click|preventDefault={() => postLogin(username, password)} // Needs to update isLoading and handle error messages
       >
         Login
       </button>

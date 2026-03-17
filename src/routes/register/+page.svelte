@@ -8,6 +8,7 @@
   let username = "";
   let password = "";
   let confirmPassword = "";
+  let isLoading = false;
 
   // --- PASSWORD POLICY CHECKS ---
   $: hasLength = password.length >= 8;
@@ -81,8 +82,8 @@
 
     <div class="button-container">
       <button 
-        disabled={!isValid} 
-        on:click|preventDefault={() => postRegister(username, password)}
+        disabled={!isValid && isLoading} 
+        on:click|preventDefault={() => postRegister(username, password)} // Needs to update isLoading and handle error messages
       >
         Register
       </button>
