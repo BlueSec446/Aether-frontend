@@ -21,14 +21,16 @@ export const mockContacts: Contact[] = [
 // Message history for Chat 1 (with Elena)
 export const mockMessagesChat1: Message[] = [
     { 
-        id: 101, 
+        id: 101,
+        chat_id: 1, 
         sender_contact_id: 1, 
         content: "Do you have the documents?", 
         timestamp: "2026-03-17T14:30:00Z", 
         status: "INCOMING_READ" 
     },
     { 
-        id: 102, 
+        id: 102,
+        chat_id: 1, 
         sender_contact_id: null, // null means we sent it
         content: "Yes, I will send them over Tor tonight.", 
         timestamp: "2026-03-17T14:35:00Z", 
@@ -40,6 +42,7 @@ export const mockMessagesChat1: Message[] = [
 export const mockMessagesChat2: Message[] = [
     { 
         id: 201, 
+        chat_id: 2,
         sender_contact_id: null, 
         content: "Are we still meeting at the drop?", 
         timestamp: "2026-03-16T09:00:00Z", 
@@ -47,6 +50,7 @@ export const mockMessagesChat2: Message[] = [
     },
     { 
         id: 202, 
+        chat_id: 2,
         sender_contact_id: 2, 
         content: "Location compromised. Abort.", 
         timestamp: "2026-03-17T16:45:00Z", 
@@ -124,6 +128,7 @@ export const mockSyncData: SyncResponse = {
     new_messages: [
         { 
             id: 301, 
+            chat_id: 1,
             sender_contact_id: 1, 
             content: "Update: The package is secure.", 
             timestamp: "2026-03-17T16:50:00Z", 

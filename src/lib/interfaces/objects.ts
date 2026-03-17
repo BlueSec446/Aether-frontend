@@ -9,7 +9,8 @@ export type MessageStatus =
     | "INCOMING_READ";
 
 export interface Message {
-    id: number;  
+    id: number;
+    chat_id: number;  
     sender_contact_id: number | null;
     content: string;
     timestamp: string;

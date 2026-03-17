@@ -28,7 +28,7 @@
 
     // Add user message to the UI instantly with no ID
     const userMessage = inputText;
-    let newMessage: Message = {id: 0, sender_contact_id: null, content: userMessage, timestamp: new Date().toDateString(), status: "OUTGOING_CREATED"};
+    let newMessage: Message = {id: 0, chat_id: chat.chat_id, sender_contact_id: null, content: userMessage, timestamp: new Date().toDateString(), status: "OUTGOING_CREATED"};
     messages = [...messages, newMessage];
 
     inputText = '';
