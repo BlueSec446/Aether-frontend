@@ -1,16 +1,18 @@
 <script lang="ts">
     import ChatBar from '$lib/components/ChatBar.svelte';
     import ChatWindow from '$lib/components/ChatWindow.svelte';
-    import type { ChatBarArray } from '$lib/interfaces/objects';
+    import type { Chat } from '$lib/interfaces/objects';
     import type { PageData } from './$types';
+    import { loadChats, newContact } from './chats'
 
     // Loaded by the load function in +page.ts
     export let data: PageData;
-    let chats: ChatBarArray = data.chats ?? []; // If undefined default to []
+    let chats: Chat[] = data.chats ?? []; // If undefined default to []
 
-    let activeChatId = 1;
+    let activeChatId = 0;
 
     // Reactive statement to find the currently selected chat's name
+    $: console.log("Current state of chats:", chats);
     $: activeChat = chats.find(c => c.chat_id === activeChatId);
 </script>
 
@@ -20,6 +22,19 @@
       chats={chats} 
       {activeChatId} 
       onSelect={(id) => {activeChatId = id}} 
+      onAddChat={async (alias, onionAdress) => {
+        let newC = await newContact(alias, onionAdress);
+        
+        chats = await loadChats();
+
+        const newChat = chats.find(c => c.contact_ids[0].contact_id === newC.contact_id);
+        
+        if (newChat) {
+          activeChatId = newChat.chat_id;
+        } else {
+          console.log("No new Chat found!")
+        }
+      }}
     />
 
     {#if activeChat}

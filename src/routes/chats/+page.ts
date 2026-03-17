@@ -1,15 +1,10 @@
 import type { PageLoad } from './$types';
-import type { Chat } from "$lib/interfaces/objects"
-import type {  } from '$lib/interfaces/response_objects';
-import { mockGetAllChatsResponse } from '$lib/mock_data';
+import { loadChats } from './chats';
 
 
 export const load: PageLoad = async () => {
-  // Fetches the chat list before the UI mounts
-  let mockChatsResponse: Chat[] = mockGetAllChatsResponse; 
-  return { chats: mockChatsResponse };
-  
-  const responseJson: Chat[] = await window.frontendAPI.getChats();
+  // Automatically executed, when /chats is opend.
+  let chats = await loadChats();
 
-  return { chats: responseJson };
+  return { chats: chats}
 }
