@@ -1,9 +1,13 @@
 import type { Message } from "$lib/interfaces/objects";
 import type {  } from "$lib/interfaces/response_objects";
-import { mockGetOneChatResponse } from "$lib/mock_data";
+import { mockMessagesChat1, mockMessagesChat2 } from "$lib/mock_data";
 
 export async function loadChat(chatId: number){
-    return mockGetOneChatResponse;
+    if (chatId == 1) {
+        return mockMessagesChat1;
+    } else {
+        return mockMessagesChat2;
+    }
 
     const responseJson = await window.frontendAPI.getMessages(chatId);
 
