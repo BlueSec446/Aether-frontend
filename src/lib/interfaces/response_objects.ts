@@ -28,6 +28,7 @@ export interface SystemStatusResponse {
 
 // Sub-interface for the Sync payload
 export interface StatusUpdate {
+    chat_id: number;
     message_id: number;
     status: MessageStatus;
 }
