@@ -4,13 +4,22 @@
 import { writable } from 'svelte/store';
 import type { Message, MessageStatus } from '$lib/interfaces/objects';
 
+function sortMessages(messages: Message[]): Message[] {
+    return [...messages].sort((a, b) => {
+        const timeA = a.timestamp ? new Date(a.timestamp).getTime() : 0;
+        const timeB = b.timestamp ? new Date(b.timestamp).getTime() : 0;
+
+        return timeB - timeA; 
+    });
+}
+
 function createMessageStore() {
     const { subscribe, set, update } = writable<Message[]>([]);
 
     return {
         subscribe,
         
-        setMessages: (messages: Message[]) => set(messages),
+        setMessages: (messages: Message[]) => set(sortMessages(messages)),
         
         // Push a new message to the screen instantly
         addMessage: (message: Message) => update(messages => {
