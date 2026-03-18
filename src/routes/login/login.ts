@@ -1,7 +1,9 @@
 import { userStore } from "$lib/stores/user_store";
+import { goto } from "$app/navigation";
 
 export async function postLogin(username: string, password: string) {
-    // BACKEND: Post Login Function
+    goto("/chats");
+    //BACKEND: Post Login Function
     //const responseJson = await window.frontendAPI.login(username, password);
     
     /**

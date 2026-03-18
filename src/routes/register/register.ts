@@ -1,5 +1,5 @@
 export async function postRegister(username:string, password:string) {
-    // BACKEND: Post Register Function
+    //BACKEND: Post Register Function
     //const responseJson = await window.frontendAPI.register(username, password);
     
     /**
