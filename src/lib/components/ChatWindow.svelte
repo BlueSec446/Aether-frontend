@@ -6,14 +6,12 @@
   import { onMount, tick } from 'svelte';
   import type { Message, Chat } from '$lib/interfaces/objects';
   import{ loadChat, postMessage } from "./chat_window"
+  import { messageStore } from '$lib/stores/messages_store';
+  import { activeChat } from '$lib/stores/active_chat_store';
 
-  // Receives the chatId from the parent +page.svelte file
-  export let chat: Chat;
-
-  let messages: Message[] = [];
 
   onMount(async () => {
-    messages = await loadChat(chat.chat_id);
+    await loadChat();
   });
   
   let inputText = '';
@@ -27,33 +25,18 @@
     if (!inputText.trim() || isLoading) return;
 
     // Add user message to the UI instantly with no ID
-    const userMessage = inputText;
-    let newMessage: Message = {id: 0, chat_id: chat.chat_id, sender_contact_id: null, content: userMessage, timestamp: new Date().toDateString(), status: "OUTGOING_CREATED"};
-    messages = [...messages, newMessage];
+    let newMessage: Message = {id: 0, chat_id: $activeChat.chat_id, sender_contact_id: null, content: inputText, timestamp: new Date().toDateString(), status: "OUTGOING_CREATED"};
 
     inputText = '';
     if (textAreaElement) {
       // Resize the input box to it's standard size
       textAreaElement.style.height = 'auto';
     }
-    
-    await scrollToBottom();
-
-    newMessage.id = await postMessage(chat.chat_id, newMessage);
-
-    messages.pop()
-    messages = [...messages, newMessage];
+    await postMessage(newMessage);
 
     await scrollToBottom();
   }
 
-  function receiveMessage() {
-    //const data = await response.json();
-
-      // Append the contact's response
-     // messages = [...messages, { role: 'contact', content: data.reply, timestamp: data.timestamp}];
-
-  }
   // --- 3. HELPER FUNCTIONS ---
   function handleKeydown(event: KeyboardEvent) {
     // Send on Enter (but allow Shift+Enter for new lines)
@@ -130,7 +113,7 @@
 
 <div class="chat-layout">
   <div class="header">
-    <h3>{chat.title}</h3>
+    <h3>{$activeChat.title}</h3>
 
     <div class="menu-container" use:clickOutside={closeMenu}>
       <button class="menu-btn" on:click={toggleMenu} title="Menu">
@@ -149,14 +132,14 @@
   </div>
 
   <div class="chat-window" bind:this={chatContainer}>
-    {#if messages.length === 0}
+    {#if $messageStore.length === 0}
       <div class="empty-state">
         <p>This is a new Chat.</p>
         <p>Send a message to start this chat!</p>
       </div>
     {/if}
 
-    {#each messages as msg}
+    {#each $messageStore as msg}
       {#if msg.sender_contact_id === null}
         <div class="message user">
           <div class="bubble">{msg.content}</div>

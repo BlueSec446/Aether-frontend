@@ -1,12 +1,8 @@
 <script lang="ts">
-  import type { Chat } from '$lib/interfaces/objects';
+  import { activeChat } from '$lib/stores/active_chat_store'; 
   import { userStore } from '$lib/stores/user_store';
-
-  export let chats: Chat[] = [];
-  export let activeChatId: number = 0;
-
-  export let onSelect: (id: number) => void = () => {};
-  export let onAddChat: (alias: string, onion: string) => void = () => {};
+  import { chatStore } from '$lib/stores/chat_store';
+    import { onAddChat } from './chat_bar';
 
   // User Account Information
   let isAccountModalOpen = false;
@@ -112,15 +108,15 @@
   <div class="seperation"></div>
   
   <div class="chat-list">
-    {#if chats.length === 0}
+    {#if $chatStore.length === 0}
       <div class="empty-text">No chats yet.</div>
     {/if}
 
-    {#each chats as chat}
+    {#each $chatStore as chat}
       <button 
         class="chat-item" 
-        class:active={chat.chat_id === activeChatId}
-        on:click={() => onSelect(chat.chat_id)} >
+        class:active={chat.chat_id === $activeChat?.chat_id}
+        on:click={() => $activeChat = chat} >
         <span class="alias">{chat.title}</span>
         
         {#if chat.last_message && chat.last_message.status === 'INCOMING_UNREAD'}
