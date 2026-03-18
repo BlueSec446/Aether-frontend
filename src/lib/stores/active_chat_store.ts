@@ -1,4 +1,7 @@
-import { writable, derived } from 'svelte/store';
+/** 
+ * This global available store handles the activeChat
+ */
+import { writable } from 'svelte/store';
 import type { Chat } from '$lib/interfaces/objects';
 
 export const DEFAULT_CHAT: Chat = {
