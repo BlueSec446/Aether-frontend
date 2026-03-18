@@ -137,7 +137,8 @@ export const mockSyncData: SyncResponse = {
     ],
     status_updates: [
         { 
-            message_id: 999, 
+            message_id: 999,
+            chat_id: 1,
             status: "OUTGOING_RECEIVED" // Simulates an older message finally being delivered
         }
     ]
