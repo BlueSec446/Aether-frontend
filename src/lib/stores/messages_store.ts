@@ -30,14 +30,14 @@ function createMessageStore() {
         return [...messages, message];
       }),
 
-    updateMessageAfterSend: (messageId: number, status: MessageStatus) =>
+    updateMessageAfterSend: (oldId: number, messageId: number, status: MessageStatus) =>
       update((messages) => {
-        if (messages.length > 0) {
-          const lastIndex = messages.length - 1;
-          messages[lastIndex].id = messageId;
-          messages[lastIndex].status = status;
+        let message = messages.find(m => m.id === oldId);
+        if (message) {
+          message.id = messageId;
+          message.status = status;
         }
-        return messages;
+        return sortMessages(messages);
       }),
 
     updateMessageStatus: (messageId: number, status: MessageStatus) =>

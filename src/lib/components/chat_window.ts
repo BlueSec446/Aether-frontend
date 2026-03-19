@@ -18,6 +18,10 @@ export async function loadChat(){
 
 export async function postMessage(message: Message) {
     // Sofortiges UI-Feedback
+    while (get(messageStore).find(m => m.id === message.id)) {
+        // If several messages are being sent the m.id is updated to the first negative number that is not stored inside messageStore
+        message.id -= 1;
+    }
     messageStore.addMessage(message);
 
     try {
@@ -25,7 +29,7 @@ export async function postMessage(message: Message) {
         const responseJson = await window.frontendAPI.sendMessage(get(activeChat).chat_id, message.content);
         
         // Ersetzt die Dummy-ID durch die echte ID aus der DB und updatet den Status auf "OUTGOING_CREATED"
-        messageStore.updateMessageAfterSend(responseJson.message_id, responseJson.status);
+        messageStore.updateMessageAfterSend(message.id, responseJson.message_id, responseJson.status);
     } catch (error) {
         console.error("Fehler beim Senden der Nachricht:", error);
         // Optional: Hier könnte man den Status der Nachricht auf "FAILED" setzen, falls du das ins UI einbaust

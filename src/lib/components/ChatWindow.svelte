@@ -25,7 +25,7 @@
     if (!inputText.trim() || isLoading) return;
 
     // Add user message to the UI instantly with no ID
-    let newMessage: Message = {id: 0, chat_id: $activeChat.chat_id, sender_contact_id: null, content: inputText, timestamp: new Date().toISOString(), status: "OUTGOING_CREATED"};
+    let newMessage: Message = {id: -1, chat_id: $activeChat.chat_id, sender_contact_id: null, content: inputText, timestamp: new Date().toISOString(), status: "OUTGOING_CREATED"};
 
     inputText = '';
     if (textAreaElement) {
