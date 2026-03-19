@@ -26,12 +26,12 @@ export interface Chat {
 }
 
 export interface Contact {
-    contact_id: number;
-    alias: string;
-    onion_adress: string;
+    id: number;
+    display_name: string;
+    onion_address: string;
 }
 
 export interface UserProfile {
-    alias: string;
+    display_name: string;
     onion_address: string;
 }
