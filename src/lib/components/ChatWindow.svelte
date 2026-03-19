@@ -123,7 +123,7 @@
 
 <div class="chat-layout">
   <div class="header">
-    <h3>{$activeChat.is_group ? $activeChat.title : $activeChat.display_name}</h3>
+    <h3>{$activeChat.title}</h3>
 
     <div class="menu-container" use:clickOutside={closeMenu}>
       <button class="menu-btn" on:click={toggleMenu} title="Menu">
