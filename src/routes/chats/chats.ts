@@ -1,39 +1,38 @@
 import { get } from 'svelte/store';
 import type { Chat } from "$lib/interfaces/objects"
 import { chatStore } from "$lib/stores/chat_store";
-import { mockChats } from '$lib/mock_data';
 import { activeChat } from "$lib/stores/active_chat_store";
 import type { SyncResponse } from '$lib/interfaces/response_objects';
 import { messageStore } from '$lib/stores/messages_store';
 
-
 export async function loadChats() {
-    // Fetches the chat list before the UI mounts
-    let mockChatsResponse: Chat[] = mockChats; 
-    chatStore.setChats(mockChatsResponse);
+    try {
+        // Echte Chats vom Backend abfragen
+        const responseJson: Chat[] = await window.frontendAPI.getChats();
+        chatStore.setChats(responseJson);
 
-    //BACKEND dev, hier GET Chats. Eigentlicher API-Call ist das hier
-    /**const responseJson: Chat[] = await window.frontendAPI.getChats();
-
-    chatStore.setChats(mockChatsResponse); 
-    activeChat.set(get(chatStore)[0]);*/
-
-    // Check if a chat is already active and keep it active
-    if (get(activeChat).chat_id !== -1){
-        // Update activeChat (if changes happend)
-        activeChat.set(chatStore.getOneChat(get(activeChat).chat_id));
+        // Prüfen, ob schon ein Chat aktiv ist und diesen ggf. aktualisieren
+        const currentActive = get(activeChat);
+        if (currentActive.chat_id !== -1){
+            activeChat.set(chatStore.getOneChat(currentActive.chat_id));
+        }
+    } catch (error) {
+        console.error("Fehler beim Laden der Chats:", error);
     }
 }
 
 export async function sync(lastSync: string) {
-    //BACKEND hier Logik einfügen
-    const currentTime = Date.now().toString();
-    //const responseJson = await window.frontendAPI.sync(lastSync);
-    console.log("I got executed!!");
-    //processSyncData(responseJson);
-    return currentTime;
+    try {
+        const responseJson = await window.frontendAPI.sync(lastSync);
+        processSyncData(responseJson);
+        
+        // Gebe die aktuelle Zeit im ISO-Format zurück (wird für den nächsten Request genutzt)
+        return new Date().toISOString();
+    } catch (error) {
+        console.error("Fehler beim Sync:", error);
+        return lastSync; // Bei Fehler alten Zeitstempel behalten, um nichts zu verpassen
+    }
 }
-
 
 export function processSyncData(syncData: SyncResponse) {
     for (const newMsg of syncData.new_messages){
@@ -53,8 +52,11 @@ export function processSyncData(syncData: SyncResponse) {
     }
 }
 
-
 export async function getSystemStatus(){
-    //BACKEND hier logik einfügen
-    const responseJson = await window.frontendAPI.systemStatus();
+    try {
+        return await window.frontendAPI.systemStatus();
+    } catch (error) {
+        console.error("System-Status konnte nicht abgerufen werden:", error);
+        return null;
+    }
 }

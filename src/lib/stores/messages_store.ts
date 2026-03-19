@@ -5,48 +5,58 @@ import { writable } from 'svelte/store';
 import type { Message, MessageStatus } from '$lib/interfaces/objects';
 
 function sortMessages(messages: Message[]): Message[] {
-    return [...messages].sort((a, b) => {
-        const timeA = a.timestamp ? new Date(a.timestamp).getTime() : 0;
-        const timeB = b.timestamp ? new Date(b.timestamp).getTime() : 0;
+  return [...messages].sort((a, b) => {
+    const timeA = a.timestamp ? new Date(a.timestamp).getTime() : 0;
+    const timeB = b.timestamp ? new Date(b.timestamp).getTime() : 0;
 
-        return timeB - timeA; 
-    });
+    return timeA - timeB;
+  });
 }
 
 function createMessageStore() {
-    const { subscribe, set, update } = writable<Message[]>([]);
+  const { subscribe, set, update } = writable<Message[]>([]);
 
-    return {
-        subscribe,
-        
-        setMessages: (messages: Message[]) => set(sortMessages(messages)),
-        
-        // Push a new message to the screen instantly
-        addMessage: (message: Message) => update(messages => {
-            return [...messages, message];
-        }),
+  return {
+    subscribe,
 
-        updateMessageAfterSend: (messageId: number, status: MessageStatus) => update(messages => {
-            messages[-1].id = messageId;
-            messages[-1].status = status;
-            return messages;
-        }),
+    setMessages: (messages: Message[]) => set(sortMessages(messages)),
 
-        updateMessageStatus: (messageId: number, status: MessageStatus) => update(messages => {
-            const index = messages.findIndex(m => m.id === messageId);
-            if (index !== -1) {
-                messages[index].status = status;
-            }
-            return messages;
-        }),
+    // Push a new message to the screen instantly
+    addMessage: (message: Message) =>
+      update((messages) => {
+        if (messages.find(m => m.id === message.id)) {
+                return messages;
+        }
+        return [...messages, message];
+      }),
 
-        deleteMessage: (message: Message) => update(messages => {
-            // Returns the array, without the submitted message
-            return messages.filter(m => m.id !== message.id)
-        }),
+    updateMessageAfterSend: (messageId: number, status: MessageStatus) =>
+      update((messages) => {
+        if (messages.length > 0) {
+          const lastIndex = messages.length - 1;
+          messages[lastIndex].id = messageId;
+          messages[lastIndex].status = status;
+        }
+        return messages;
+      }),
 
-        reset: () => set([])
-    };
+    updateMessageStatus: (messageId: number, status: MessageStatus) =>
+      update((messages) => {
+        const index = messages.findIndex((m) => m.id === messageId);
+        if (index !== -1) {
+          messages[index].status = status;
+        }
+        return messages;
+      }),
+
+    deleteMessage: (message: Message) =>
+      update((messages) => {
+        // Returns the array, without the submitted message
+        return messages.filter((m) => m.id !== message.id);
+      }),
+
+    reset: () => set([]),
+  };
 }
 
 export const messageStore = createMessageStore();

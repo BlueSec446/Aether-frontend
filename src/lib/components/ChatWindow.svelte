@@ -53,6 +53,16 @@
     }
   }
 
+  function formatTime(timestamp: string) {
+    if (!timestamp) return "";
+    const date = new Date(timestamp);
+    return date.toLocaleTimeString('de-DE', { 
+      hour: '2-digit', 
+      minute: '2-digit', 
+      hour12: false 
+    });
+  }
+
   // Functions to handle the menu inside of the Header
   
   function clickOutside(node: HTMLElement, callback: () => void) {
@@ -113,7 +123,7 @@
 
 <div class="chat-layout">
   <div class="header">
-    <h3>{$activeChat.title}</h3>
+    <h3>{$activeChat.is_group ? $activeChat.title : $activeChat.display_name}</h3>
 
     <div class="menu-container" use:clickOutside={closeMenu}>
       <button class="menu-btn" on:click={toggleMenu} title="Menu">
@@ -142,17 +152,23 @@
     {#each $messageStore as msg}
       {#if msg.sender_contact_id === null}
         <div class="message user">
-          <div class="bubble">{msg.content}</div>
+          <div class="bubble">
+            {msg.content}
+            <div class="message-time">{formatTime(msg.timestamp)}</div>
+          </div>
             {#if msg.status === "OUTGOING_RECEIVED"}
-              <div class="status-symbol">&#10004</div>
+              <div class="status-symbol">&#10004;</div>
             {/if}
             {#if msg.status !== "OUTGOING_RECEIVED"}
-              <div class="status-symbol">&#9634</div>
+              <div class="status-symbol">&#9634;</div>
             {/if}
         </div>
       {:else}
         <div class="message contact">
-          <div class="bubble">{msg.content}</div>
+          <div class="bubble">
+            {msg.content}
+            <div class="message-time">{formatTime(msg.timestamp)}</div>
+          </div>
         </div>
       {/if}
     {/each}
