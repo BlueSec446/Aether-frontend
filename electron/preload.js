@@ -1,7 +1,8 @@
 const { contextBridge } = require('electron');
 
 const API_KEY = process.env.AETHER_API_KEY; 
-const API_BASE_URL = 'http://127.0.0.1:5000/api/v1';
+const API_PORT = process.env.AETHER_API_PORT || '5000';
+const API_BASE_URL = `http://127.0.0.1:${API_PORT}/api/v1`;
 
 
 async function apiCall(endpoint, options = {}) {
@@ -18,7 +19,7 @@ async function apiCall(endpoint, options = {}) {
 
         if (!response.ok) {
             const errorData = await response.json().catch(() => ({}));
-            const backendMessage = errorData.message || response.statusText;
+            const backendMessage = errorData.error || errorData.message || response.statusText;
             throw new Error(backendMessage);
         }
         return await response.json();
@@ -62,11 +63,11 @@ contextBridge.exposeInMainWorld("frontendAPI", {
             method: "GET"
         }),
     
-    newContact: (onionAdress, alias) =>
-        apiCall(`/contacs`, {
+    newContact: (onionAddress, alias) =>
+        apiCall(`/contacts`, {
             method: "POST",
             body: JSON.stringify({
-                "onion_adress": onionAdress, 
+                "onion_address": onionAddress, 
                 "display_name": alias
             })
         }),
