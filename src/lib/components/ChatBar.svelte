@@ -76,7 +76,7 @@
 
       <div class="info-group">
         <label for="info-value">My Alias</label>
-        <div id= "info-value" class="info-value">{$userStore.alias}</div>
+        <div id= "info-value" class="info-value">{$userStore.display_name}</div>
       </div>
 
       <div class="info-group">
