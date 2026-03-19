@@ -25,7 +25,7 @@
     if (!inputText.trim() || isLoading) return;
 
     // Add user message to the UI instantly with no ID
-    let newMessage: Message = {id: 0, chat_id: $activeChat.chat_id, sender_contact_id: null, content: inputText, timestamp: new Date().toDateString(), status: "OUTGOING_CREATED"};
+    let newMessage: Message = {id: -1, chat_id: $activeChat.chat_id, sender_contact_id: null, content: inputText, timestamp: new Date().toISOString(), status: "OUTGOING_CREATED"};
 
     inputText = '';
     if (textAreaElement) {
@@ -51,6 +51,16 @@
     if (chatContainer) {
       chatContainer.scrollTop = chatContainer.scrollHeight;
     }
+  }
+
+  function formatTime(timestamp: string) {
+    if (!timestamp) return "";
+    const date = new Date(timestamp);
+    return date.toLocaleTimeString('de-DE', { 
+      hour: '2-digit', 
+      minute: '2-digit', 
+      hour12: false 
+    });
   }
 
   // Functions to handle the menu inside of the Header
@@ -142,17 +152,23 @@
     {#each $messageStore as msg}
       {#if msg.sender_contact_id === null}
         <div class="message user">
-          <div class="bubble">{msg.content}</div>
+          <div class="bubble">
+            {msg.content}
+            <div class="message-time">{formatTime(msg.timestamp)}</div>
+          </div>
             {#if msg.status === "OUTGOING_RECEIVED"}
-              <div class="status-symbol">&#10004</div>
+              <div class="status-symbol">&#10004;</div>
             {/if}
             {#if msg.status !== "OUTGOING_RECEIVED"}
-              <div class="status-symbol">&#9634</div>
+              <div class="status-symbol">&#9634;</div>
             {/if}
         </div>
       {:else}
         <div class="message contact">
-          <div class="bubble">{msg.content}</div>
+          <div class="bubble">
+            {msg.content}
+            <div class="message-time">{formatTime(msg.timestamp)}</div>
+          </div>
         </div>
       {/if}
     {/each}

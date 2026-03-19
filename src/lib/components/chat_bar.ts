@@ -3,18 +3,26 @@ import { chatStore } from "$lib/stores/chat_store";
 import { get } from "svelte/store";
 import { loadChats } from "../../routes/chats/chats";
 
+export async function onAddChat(alias: string, onionAddress: string){
+  try {
+      const newContact = await window.frontendAPI.newContact(onionAddress, alias);
+      
+      await loadChats(); 
 
-export async function onAddChat(alias: string, onionAdress: string){
-  //BACKEND Hier Logik einfügen
-  let newC = await window.frontendAPI.newContact(alias, onionAdress);
-  
-  await loadChats();
-
-  const newChat = get(chatStore).find(c => c.contact_ids[0].contact_id === newC.contact_id);
-  
-  if (newChat) {
-    activeChat.set(newChat);
-  } else {
-    console.log("No new Chat found!");
+      if (newContact && newContact.id) {
+          const chats = get(chatStore);
+          const newChat = chats.find(chat => 
+            chat.contact_ids?.some(contact => contact.contact_id === newContact.id)
+          );
+          
+          if (newChat) {
+            activeChat.set(newChat);
+          } else {
+            console.warn("Neuer Chat wurde nicht in der Chat-Liste gefunden.");
+          }
+      }
+  } catch (error) {
+      console.error("Fehler beim Hinzufügen des Kontakts:", error);
+      alert("Kontakt konnte nicht hinzugefügt werden.");
   }
 }

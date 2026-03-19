@@ -11,7 +11,7 @@ export interface BaseResponse {
 
 // Returned by POST /auth/register and POST /auth/login
 export interface AuthResponse extends BaseResponse {
-    onion_address?: string;
+    onion_address: string;
 }
 
 // Returned by POST /messages
