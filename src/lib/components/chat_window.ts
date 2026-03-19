@@ -65,15 +65,18 @@ export async function clearChat() {
 
 // Contact Functions
 export async function updateAlias(id: number, newAlias: string) {
-    let currentChat = get(activeChat);
-    currentChat.title = newAlias;
-    activeChat.set(currentChat);
+    const previousChat = get(activeChat);
+
+    // Optimistisches Update des aktiven Chats im UI
+    activeChat.set({ ...previousChat, title: newAlias });
     
     try {
         await window.frontendAPI.updateContactAlias(id, newAlias);
         await loadChats(); // Chatliste links ebenfalls aktualisieren
     } catch (error) {
         console.error("Alias konnte nicht geändert werden:", error);
+        // Rollback bei Fehler: vorherigen Zustand wiederherstellen
+        activeChat.set(previousChat);
     }
 }
 
