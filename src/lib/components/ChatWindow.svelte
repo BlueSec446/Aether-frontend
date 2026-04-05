@@ -142,7 +142,7 @@
       </div>
     {/if}
 
-    {#each $messageStore as msg}
+    {#each $messageStore as msg (msg.id)}
       {#if msg.sender_contact_id === null}
         <div class="message user">
           <div class="bubble">

@@ -110,7 +110,7 @@
       <div class="empty-text">No chats yet.</div>
     {/if}
 
-    {#each $chatStore as chat}
+    {#each $chatStore as chat (chat.chat_id)}
       <button
         class="chat-item"
         class:active={chat.chat_id === $activeChat?.chat_id}
