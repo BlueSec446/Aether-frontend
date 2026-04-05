@@ -27,7 +27,7 @@
     });
 
     onDestroy(() => {
-      isPolling = true;
+      isPolling = false;
       clearTimeout(pollingTimer);
     })
 </script>
