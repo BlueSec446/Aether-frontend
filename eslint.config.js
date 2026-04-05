@@ -38,5 +38,11 @@ export default [
   {
     // Ignore build output and module folders
     ignores: ['build/', '.svelte-kit/', 'dist/', 'node_modules/']
+  },
+  {
+    files: ['**/*.test.ts'],
+    rules: {
+      '@typescript-eslint/no-explicit-any': 'off'
+    }
   }
 ];
