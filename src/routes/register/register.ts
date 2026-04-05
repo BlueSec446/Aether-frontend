@@ -1,4 +1,5 @@
 import { goto } from '$app/navigation';
+import { resolve } from '$app/paths';
 
 export async function postRegister(username: string, password: string) {
   try {
@@ -10,7 +11,7 @@ export async function postRegister(username: string, password: string) {
       alert('Registration failed');
     } else {
       console.log('Registration successful! Your Onion Address:', responseJson.onion_address);
-      goto('/login'); // Open Login
+      goto(resolve('/login')); // Open Login
     }
   } catch (error) {
     console.error('CRITICAL ERROR during registration:', error);

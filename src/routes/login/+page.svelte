@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { resolve } from '$app/paths';
   import { postLogin } from './login';
 
   let username = '';
@@ -51,7 +52,7 @@
     </div>
 
     <div class="link-container">
-      <a href="/register">Create an account</a>
+      <a href={resolve('/register')}>Create an account</a>
     </div>
   </form>
 </div>
