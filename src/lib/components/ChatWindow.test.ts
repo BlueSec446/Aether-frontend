@@ -3,7 +3,7 @@ import { render, fireEvent, screen, cleanup } from '@testing-library/svelte';
 import ChatWindow from './ChatWindow.svelte';
 import { activeChat, DEFAULT_CHAT } from '$lib/stores/active_chat_store';
 import { messageStore } from '$lib/stores/messages_store';
-import { loadChat, postMessage, clearChat, deleteContact } from './chat_window';
+import { loadChat, postMessage, deleteContact } from './chat_window';
 import type { Message, Chat } from '$lib/interfaces/objects';
 
 // Intercept chat_window logic to prevent actual API calls during UI testing

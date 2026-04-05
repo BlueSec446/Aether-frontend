@@ -14,7 +14,7 @@ export async function loadChat() {
     const responseJson = await window.frontendAPI.getMessages(currentChat.chat_id);
     messageStore.setMessages(responseJson);
 
-    var lastMessage = get(messageStore).at(-1);
+    const lastMessage = get(messageStore).at(-1);
 
     if (lastMessage) {
       // Update last message status in visuals

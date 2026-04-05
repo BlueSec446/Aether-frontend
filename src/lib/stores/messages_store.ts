@@ -32,7 +32,7 @@ function createMessageStore() {
 
     updateMessageAfterSend: (oldId: number, messageId: number, status: MessageStatus) =>
       update((messages) => {
-        let message = messages.find((m) => m.id === oldId);
+        const message = messages.find((m) => m.id === oldId);
         if (message) {
           message.id = messageId;
           message.status = status;

@@ -1,6 +1,6 @@
 <script lang="ts">
   import { onMount, tick } from 'svelte';
-  import type { Message, Chat } from '$lib/interfaces/objects';
+  import type { Message } from '$lib/interfaces/objects';
   import { clearChat, deleteContact, loadChat, postMessage } from './chat_window';
   import { messageStore } from '$lib/stores/messages_store';
   import { activeChat } from '$lib/stores/active_chat_store';

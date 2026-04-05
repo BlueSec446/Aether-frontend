@@ -1,3 +1,4 @@
+// eslint-disable-next-line @typescript-eslint/no-require-imports
 const { contextBridge } = require('electron');
 
 const API_KEY = process.env.AETHER_API_KEY;

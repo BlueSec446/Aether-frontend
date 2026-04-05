@@ -3,7 +3,7 @@
  */
 import { writable, get } from 'svelte/store';
 import type { Chat, Message, MessageStatus } from '$lib/interfaces/objects';
-import { activeChat, DEFAULT_CHAT } from './active_chat_store';
+import { DEFAULT_CHAT } from './active_chat_store';
 
 function sortChats(chats: Chat[]): Chat[] {
   return [...chats].sort((a, b) => {
