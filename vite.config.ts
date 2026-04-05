@@ -3,6 +3,9 @@ import { defineConfig } from 'vitest/config';
 
 export default defineConfig({
 	plugins: [sveltekit()],
+	resolve: {
+        conditions: ['mode', 'browser'] // only handle as browser not as server
+    },
 	test: {
 		environment: 'jsdom',
 		globals: true,
