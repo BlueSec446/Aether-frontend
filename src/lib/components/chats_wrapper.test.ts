@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { get } from 'svelte/store';
-import { loadChats, sync, processSyncData, getSystemStatus } from './chats';
+import { loadChats, sync, processSyncData, getSystemStatus } from './chats_wrapper';
 import { chatStore } from '$lib/stores/chat_store';
 import { activeChat, DEFAULT_CHAT } from '$lib/stores/active_chat_store';
 import { messageStore } from '$lib/stores/messages_store';

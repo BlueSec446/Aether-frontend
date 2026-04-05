@@ -3,10 +3,10 @@ import { get } from 'svelte/store';
 import { onAddChat } from './chat_bar';
 import { activeChat, DEFAULT_CHAT } from '$lib/stores/active_chat_store';
 import { chatStore } from '$lib/stores/chat_store';
-import { loadChats } from '../../routes/chats/chats';
+import { loadChats } from './chats_wrapper';
 import type { Chat } from '$lib/interfaces/objects';
 
-vi.mock('../../routes/chats/chats', () => ({
+vi.mock('./chats_wrapper', () => ({
     loadChats: vi.fn()
 }));
 

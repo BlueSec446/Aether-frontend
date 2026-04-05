@@ -2,7 +2,7 @@ import type { Message } from "$lib/interfaces/objects";
 import { messageStore } from "$lib/stores/messages_store";
 import { activeChat, DEFAULT_CHAT } from "$lib/stores/active_chat_store";
 import { get } from "svelte/store";
-import { loadChats } from "../../routes/chats/chats";
+import { loadChats } from "./chats_wrapper";
 import { chatStore } from "$lib/stores/chat_store";
 
 export async function loadChat(){

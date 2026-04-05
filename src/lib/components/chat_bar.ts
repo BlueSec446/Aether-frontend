@@ -1,7 +1,7 @@
 import { activeChat } from "$lib/stores/active_chat_store";
 import { chatStore } from "$lib/stores/chat_store";
 import { get } from "svelte/store";
-import { loadChats } from "../../routes/chats/chats";
+import { loadChats } from "./chats_wrapper";
 
 export async function onAddChat(alias: string, onionAddress: string){
   try {

@@ -8,11 +8,11 @@ import {
 import { messageStore } from '$lib/stores/messages_store';
 import { activeChat, DEFAULT_CHAT } from '$lib/stores/active_chat_store';
 import { chatStore } from '$lib/stores/chat_store';
-import { loadChats } from '../../routes/chats/chats';
+import { loadChats } from './chats_wrapper';
 import type { Message, Chat } from '$lib/interfaces/objects';
 
 // Mock the external loadChats function
-vi.mock('../../routes/chats/chats', () => ({
+vi.mock('./chats_wrapper', () => ({
     loadChats: vi.fn()
 }));
 
