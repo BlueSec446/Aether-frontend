@@ -5,7 +5,7 @@
 <script lang="ts">
   import { onMount, tick } from 'svelte';
   import type { Message, Chat } from '$lib/interfaces/objects';
-  import{ loadChat, postMessage } from "./chat_window"
+  import{ clearChat, deleteContact, loadChat, postMessage } from "./chat_window"
   import { messageStore } from '$lib/stores/messages_store';
   import { activeChat } from '$lib/stores/active_chat_store';
 
@@ -102,16 +102,6 @@
     console.log("Export Chat clicked");
   }
 
-  function handleClearChat() {
-    closeMenu();
-    console.log("Clear Chat clicked");
-  }
-
-  function handleDeleteContact() {
-    closeMenu();
-    console.log("Delete Contact clicked");
-  }
-
   // Functions to resize the height of the textbox
   function autoResize() {
     if (textAreaElement) {
@@ -123,7 +113,7 @@
 
 <div class="chat-layout">
   <div class="header">
-    <h3>{$activeChat.title}</h3>
+    <h3>{$activeChat.is_group ? $activeChat.title : $activeChat.display_name}</h3>
 
     <div class="menu-container" use:clickOutside={closeMenu}>
       <button class="menu-btn" on:click={toggleMenu} title="Menu">
@@ -134,8 +124,8 @@
         <div class="dropdown">
           <button on:click={handleChangeAlias}>Change Alias</button>
           <button on:click={handleExportChat}>Export Chat</button>
-          <button on:click={handleClearChat}>Clear Chat</button>
-          <button class="delete-btn" on:click={handleDeleteContact}>Delete Contact</button>
+          <button on:click={clearChat}>Clear Chat</button>
+          <button class="delete-btn" on:click={deleteContact}>Delete Contact</button>
         </div>
       {/if}
     </div>

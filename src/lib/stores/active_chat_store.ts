@@ -9,6 +9,7 @@ export const DEFAULT_CHAT: Chat = {
     is_group: 0,
     contact_ids: [{ contact_id: -1 }],
     title: "",
+    display_name : "",
     last_message: null
 };
 

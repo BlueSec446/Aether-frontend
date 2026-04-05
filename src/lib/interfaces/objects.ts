@@ -21,7 +21,8 @@ export interface Chat {
     chat_id: number;
     is_group: 0 | 1; // 0 = Direct, 1 = Group
     contact_ids: [{ contact_id: number }] // One number, if chat is private chat
-    title: string; // Not null! Either alias of User, or name of Group Chat
+    title: string  | null; //
+    display_name: string | null;
     last_message: Message | null;
 }
 
