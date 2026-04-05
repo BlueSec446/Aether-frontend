@@ -76,7 +76,7 @@
 
       <div class="info-group">
         <label for="info-value">My Alias</label>
-        <div id= "info-value" class="info-value">{$userStore.alias}</div>
+        <div id= "info-value" class="info-value">{$userStore.display_name}</div>
       </div>
 
       <div class="info-group">
@@ -117,7 +117,7 @@
         class="chat-item" 
         class:active={chat.chat_id === $activeChat?.chat_id}
         on:click={() => $activeChat = chat} >
-        <span class="alias">{chat.title}</span>
+        <span class="alias">{chat.is_group ? chat.title : chat.display_name}</span>
         
         {#if chat.last_message && chat.last_message.status === 'INCOMING_UNREAD'}
           <span class="unread-dot"></span>
@@ -282,6 +282,10 @@
     height: 1%;
     width: 100%;
     background-color: var(--color-bg-panel);
+  }
+
+  .empty-text {
+    color: var(--color-secondary);
   }
 
   .chat-item {

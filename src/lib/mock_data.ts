@@ -14,8 +14,8 @@ import type {
 // ==========================================
 
 export const mockContacts: Contact[] = [
-    { contact_id: 1, alias: "Elena", onion_adress: "v2c7q3...onion" },
-    { contact_id: 2, alias: "Marcus", onion_adress: "x9f3z1...onion" }
+    { id: 1, display_name: "Elena", onion_address: "v2c7q3...onion" },
+    { id: 2, display_name: "Marcus", onion_address: "x9f3z1...onion" }
 ];
 
 // Message history for Chat 1 (with Elena)
@@ -65,6 +65,7 @@ export const mockChats: Chat[] = [
         is_group: 0,
         contact_ids: [{ contact_id: 1 }],
         title: "Elena",
+        display_name: null,
         last_message: mockMessagesChat1[mockMessagesChat1.length - 1]
     },
     {
@@ -72,6 +73,7 @@ export const mockChats: Chat[] = [
         is_group: 0,
         contact_ids: [{ contact_id: 2 }],
         title: "Marcus",
+        display_name: null,
         last_message: mockMessagesChat2[mockMessagesChat2.length - 1]
     }
 ];
@@ -102,9 +104,9 @@ export const mockRegisterSuccess: AuthResponse = {
 
 // --- Contacts ---
 export const mockNewContactCreated: Contact = { 
-    contact_id: 3, 
-    alias: "NewSource", 
-    onion_adress: "z1q8m4...onion" 
+    id: 3, 
+    display_name: "NewSource", 
+    onion_address: "z1q8m4...onion" 
 };
 
 // --- Messages ---

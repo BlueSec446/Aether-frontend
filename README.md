@@ -32,24 +32,6 @@ Follow these steps to set up a fresh environment.
     * **macOS:** Xcode Command Line Tools (`xcode-select --install`).
     * **Linux / WSL (Ubuntu):** You **must** install the GUI libraries required by Electron. Run this command:
 
-```bash
-# Required for Ubuntu 24.04+ / WSL
-sudo apt-get update && sudo apt-get install -y \
-    libnss3 \
-    libnspr4 \
-    libatk1.0-0 \
-    libatk-bridge2.0-0 \
-    libcups2 \
-    libdrm2 \
-    libxkbcommon0 \
-    libxcomposite1 \
-    libxdamage1 \
-    libxfixes3 \
-    libxrandr2 \
-    libgbm1 \
-    libasound2t64 \
-    libgtk-3-0
-```
 
 ### 2. Installation
 

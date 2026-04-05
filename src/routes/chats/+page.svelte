@@ -15,7 +15,7 @@
       lastSyncTime = await sync(lastSyncTime);
       
       if (isPolling) {
-        pollingTimer = setTimeout(pollForMessages, 5000);
+        pollingTimer = setTimeout(pollForMessages, 25000);
       }
     }
 
@@ -27,7 +27,7 @@
     });
 
     onDestroy(() => {
-      isPolling = false;
+      isPolling = true;
       clearTimeout(pollingTimer);
     })
 </script>
@@ -36,7 +36,7 @@
   <div class="app-body">
     <ChatBar/>
 
-    {#if $activeChat}
+    {#if $activeChat.chat_id !== -1}
       {#key $activeChat}
         <ChatWindow />
       {/key}

@@ -5,7 +5,7 @@
 <script lang="ts">
   import { onMount, tick } from 'svelte';
   import type { Message, Chat } from '$lib/interfaces/objects';
-  import{ loadChat, postMessage } from "./chat_window"
+  import{ clearChat, deleteContact, loadChat, postMessage } from "./chat_window"
   import { messageStore } from '$lib/stores/messages_store';
   import { activeChat } from '$lib/stores/active_chat_store';
 
@@ -25,7 +25,7 @@
     if (!inputText.trim() || isLoading) return;
 
     // Add user message to the UI instantly with no ID
-    let newMessage: Message = {id: 0, chat_id: $activeChat.chat_id, sender_contact_id: null, content: inputText, timestamp: new Date().toDateString(), status: "OUTGOING_CREATED"};
+    let newMessage: Message = {id: -1, chat_id: $activeChat.chat_id, sender_contact_id: null, content: inputText, timestamp: new Date().toISOString(), status: "OUTGOING_CREATED"};
 
     inputText = '';
     if (textAreaElement) {
@@ -51,6 +51,16 @@
     if (chatContainer) {
       chatContainer.scrollTop = chatContainer.scrollHeight;
     }
+  }
+
+  function formatTime(timestamp: string) {
+    if (!timestamp) return "";
+    const date = new Date(timestamp);
+    return date.toLocaleTimeString('de-DE', { 
+      hour: '2-digit', 
+      minute: '2-digit', 
+      hour12: false 
+    });
   }
 
   // Functions to handle the menu inside of the Header
@@ -92,16 +102,6 @@
     console.log("Export Chat clicked");
   }
 
-  function handleClearChat() {
-    closeMenu();
-    console.log("Clear Chat clicked");
-  }
-
-  function handleDeleteContact() {
-    closeMenu();
-    console.log("Delete Contact clicked");
-  }
-
   // Functions to resize the height of the textbox
   function autoResize() {
     if (textAreaElement) {
@@ -113,7 +113,7 @@
 
 <div class="chat-layout">
   <div class="header">
-    <h3>{$activeChat.title}</h3>
+    <h3>{$activeChat.is_group ? $activeChat.title : $activeChat.display_name}</h3>
 
     <div class="menu-container" use:clickOutside={closeMenu}>
       <button class="menu-btn" on:click={toggleMenu} title="Menu">
@@ -124,8 +124,8 @@
         <div class="dropdown">
           <button on:click={handleChangeAlias}>Change Alias</button>
           <button on:click={handleExportChat}>Export Chat</button>
-          <button on:click={handleClearChat}>Clear Chat</button>
-          <button class="delete-btn" on:click={handleDeleteContact}>Delete Contact</button>
+          <button on:click={clearChat}>Clear Chat</button>
+          <button class="delete-btn" on:click={deleteContact}>Delete Contact</button>
         </div>
       {/if}
     </div>
@@ -142,17 +142,23 @@
     {#each $messageStore as msg}
       {#if msg.sender_contact_id === null}
         <div class="message user">
-          <div class="bubble">{msg.content}</div>
+          <div class="bubble">
+            {msg.content}
+            <div class="message-time">{formatTime(msg.timestamp)}</div>
+          </div>
             {#if msg.status === "OUTGOING_RECEIVED"}
-              <div class="status-symbol">&#10004</div>
+              <div class="status-symbol">&#10004;</div>
             {/if}
             {#if msg.status !== "OUTGOING_RECEIVED"}
-              <div class="status-symbol">&#9634</div>
+              <div class="status-symbol">&#9634;</div>
             {/if}
         </div>
       {:else}
         <div class="message contact">
-          <div class="bubble">{msg.content}</div>
+          <div class="bubble">
+            {msg.content}
+            <div class="message-time">{formatTime(msg.timestamp)}</div>
+          </div>
         </div>
       {/if}
     {/each}
