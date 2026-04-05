@@ -1,45 +1,45 @@
 <script lang="ts">
-    import ChatBar from '$lib/components/ChatBar.svelte';
-    import ChatWindow from '$lib/components/ChatWindow.svelte';
-    import { onDestroy, onMount } from 'svelte';
-    import { loadChats, sync } from './chats_wrapper'
-    import { activeChat } from '$lib/stores/active_chat_store';
+  import ChatBar from '$lib/components/ChatBar.svelte';
+  import ChatWindow from '$lib/components/ChatWindow.svelte';
+  import { onDestroy, onMount } from 'svelte';
+  import { loadChats, sync } from './chats_wrapper';
+  import { activeChat } from '$lib/stores/active_chat_store';
 
-    let pollingTimer: ReturnType<typeof setTimeout>;
-    let isPolling = false;
-    let isMounted = false;
-    let lastSyncTime = Date.now().toString();
+  let pollingTimer: ReturnType<typeof setTimeout>;
+  let isPolling = false;
+  let isMounted = false;
+  let lastSyncTime = Date.now().toString();
 
-    async function pollForMessages() {
-      if (!isPolling) return;
-      
-      lastSyncTime = await sync(lastSyncTime);
-      
-      if (isPolling) {
-        pollingTimer = setTimeout(pollForMessages, 25000);
-      }
+  async function pollForMessages() {
+    if (!isPolling) return;
+
+    lastSyncTime = await sync(lastSyncTime);
+
+    if (isPolling) {
+      pollingTimer = setTimeout(pollForMessages, 25000);
     }
+  }
 
-    onMount(async () => {
-      isMounted = true;
-      await loadChats();
+  onMount(async () => {
+    isMounted = true;
+    await loadChats();
 
-      if (!isMounted) return;
+    if (!isMounted) return;
 
-      isPolling = true;
-      pollForMessages();
-    });
+    isPolling = true;
+    pollForMessages();
+  });
 
-    onDestroy(() => {
-      isMounted = false;
-      isPolling = false;
-      clearTimeout(pollingTimer);
-    })
+  onDestroy(() => {
+    isMounted = false;
+    isPolling = false;
+    clearTimeout(pollingTimer);
+  });
 </script>
 
 <main class="desktop-window">
   <div class="app-body">
-    <ChatBar/>
+    <ChatBar />
 
     {#if $activeChat.chat_id !== -1}
       {#key $activeChat}

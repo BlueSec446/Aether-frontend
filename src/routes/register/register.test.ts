@@ -4,60 +4,65 @@ import { goto } from '$app/navigation';
 
 // Intercept SvelteKit routing
 vi.mock('$app/navigation', () => ({
-    goto: vi.fn()
+  goto: vi.fn()
 }));
 
 describe('Register Controller', () => {
-    let consoleErrorMock: ReturnType<typeof vi.spyOn>;
-    let consoleLogMock: ReturnType<typeof vi.spyOn>;
+  let consoleErrorMock: ReturnType<typeof vi.spyOn>;
+  let consoleLogMock: ReturnType<typeof vi.spyOn>;
 
-    beforeEach(() => {
-        // Inject context bridge facade
-        (window as any).frontendAPI = {
-            register: vi.fn()
-        };
+  beforeEach(() => {
+    // Inject context bridge facade
+    (window as any).frontendAPI = {
+      register: vi.fn()
+    };
 
-        window.alert = vi.fn();
-        consoleErrorMock = vi.spyOn(console, 'error').mockImplementation(() => {});
-        consoleLogMock = vi.spyOn(console, 'log').mockImplementation(() => {});
+    window.alert = vi.fn();
+    consoleErrorMock = vi.spyOn(console, 'error').mockImplementation(() => {});
+    consoleLogMock = vi.spyOn(console, 'log').mockImplementation(() => {});
+  });
+
+  afterEach(() => {
+    vi.clearAllMocks();
+    vi.restoreAllMocks();
+  });
+
+  it('navigates to /login on successful registration', async () => {
+    (window.frontendAPI.register as any).mockResolvedValue({
+      status: 'success',
+      onion_address: 'onion_vww6yba...'
     });
 
-    afterEach(() => {
-        vi.clearAllMocks();
-        vi.restoreAllMocks();
-    });
+    await postRegister('NewUser', 'SecurePass123');
 
-    it('navigates to /login on successful registration', async () => {
-        (window.frontendAPI.register as any).mockResolvedValue({ 
-            status: "success", 
-            onion_address: "onion_vww6yba..." 
-        });
+    expect(window.frontendAPI.register).toHaveBeenCalledWith('NewUser', 'SecurePass123');
+    expect(consoleLogMock).toHaveBeenCalledWith(
+      'Registration successful! Your Onion Address:',
+      'onion_vww6yba...'
+    );
+    expect(goto).toHaveBeenCalledWith('/login');
+  });
 
-        await postRegister('NewUser', 'SecurePass123');
+  it('aborts navigation and alerts on backend rejection', async () => {
+    (window.frontendAPI.register as any).mockResolvedValue({ status: 'error' });
 
-        expect(window.frontendAPI.register).toHaveBeenCalledWith('NewUser', 'SecurePass123');
-        expect(consoleLogMock).toHaveBeenCalledWith('Registration successful! Your Onion Address:', 'onion_vww6yba...');
-        expect(goto).toHaveBeenCalledWith('/login');
-    });
+    await postRegister('TakenUser', 'pass');
 
-    it('aborts navigation and alerts on backend rejection', async () => {
-        (window.frontendAPI.register as any).mockResolvedValue({ status: "error" });
+    expect(consoleErrorMock).toHaveBeenCalledWith('Registration failed');
+    expect(window.alert).toHaveBeenCalledWith('Registration failed');
+    expect(goto).not.toHaveBeenCalled();
+  });
 
-        await postRegister('TakenUser', 'pass');
+  it('handles critical network failures gracefully', async () => {
+    const mockError = new Error('Connection refused');
+    (window.frontendAPI.register as any).mockRejectedValue(mockError);
 
-        expect(consoleErrorMock).toHaveBeenCalledWith('Registration failed');
-        expect(window.alert).toHaveBeenCalledWith('Registration failed');
-        expect(goto).not.toHaveBeenCalled(); 
-    });
+    await postRegister('TestUser', 'pass');
 
-    it('handles critical network failures gracefully', async () => {
-        const mockError = new Error('Connection refused');
-        (window.frontendAPI.register as any).mockRejectedValue(mockError);
-
-        await postRegister('TestUser', 'pass');
-
-        expect(consoleErrorMock).toHaveBeenCalledWith('CRITICAL ERROR during registration:', mockError);
-        expect(window.alert).toHaveBeenCalledWith('An unexpected error has occurred, registration failed');
-        expect(goto).not.toHaveBeenCalled();
-    });
+    expect(consoleErrorMock).toHaveBeenCalledWith('CRITICAL ERROR during registration:', mockError);
+    expect(window.alert).toHaveBeenCalledWith(
+      'An unexpected error has occurred, registration failed'
+    );
+    expect(goto).not.toHaveBeenCalled();
+  });
 });

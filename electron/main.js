@@ -12,21 +12,21 @@ function createWindow() {
   mainWindow = new BrowserWindow({
     width: 1200,
     height: 800,
-    
-    icon: path.join(__dirname, 'src', 'lib', 'assets',  'icon.png'),
-  
+
+    icon: path.join(__dirname, 'src', 'lib', 'assets', 'icon.png'),
+
     webPreferences: {
       nodeIntegration: false,
       contextIsolation: true,
       preload: path.join(__dirname, 'preload.js') //Injects the context bridge to the backend
-    },
+    }
   });
 
   // DEV MODE: Load the URL where Vite is serving Svelte
   if (process.env.NODE_ENV === 'development') {
-    mainWindow.loadURL('http://localhost:5173'); 
+    mainWindow.loadURL('http://localhost:5173');
     mainWindow.webContents.openDevTools(); // Open Console automatically
-  } 
+  }
   // PROD MODE: Load the static HTML file built by Svelte
   else {
     mainWindow.loadFile(path.join(__dirname, 'build', 'index.html'));
