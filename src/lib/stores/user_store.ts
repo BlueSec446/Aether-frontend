@@ -21,7 +21,7 @@ function createUserStore() {
         },
 
         updateAlias: (newAlias: string) => update(state => {
-            return { ...state, alias: newAlias };
+            return { ...state, display_name: newAlias };
         }),
 
         clear: () => set(initialState)
