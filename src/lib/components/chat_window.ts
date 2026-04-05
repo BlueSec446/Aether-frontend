@@ -3,21 +3,35 @@ import { messageStore } from "$lib/stores/messages_store";
 import { activeChat, DEFAULT_CHAT } from "$lib/stores/active_chat_store";
 import { get } from "svelte/store";
 import { loadChats } from "../../routes/chats/chats";
+import { chatStore } from "$lib/stores/chat_store";
 
 export async function loadChat(){
+    /** Loads the Messages of a Chat, when a new ChatWindow is created */
     const currentChat = get(activeChat);
     if (currentChat.chat_id === -1 ) return;
-
+    
     try {
         const responseJson = await window.frontendAPI.getMessages(currentChat.chat_id);
         messageStore.setMessages(responseJson);
+
+        var lastMessage = get(messageStore).at(-1);
+
+        if (lastMessage){ 
+            // Update last message status in visuals
+            if (lastMessage.status === "INCOMING_UNREAD"){
+                lastMessage.status = "INCOMING_READ";
+            } 
+
+            messageStore.updateMessageStatus(lastMessage.id, lastMessage.status);
+            chatStore.updateLastMessage(get(activeChat).chat_id, lastMessage);
+        }
     } catch (error) {
         console.error("Fehler beim Laden des Chats:", error);
     }
 }
 
 export async function postMessage(message: Message) {
-    // Sofortiges UI-Feedback
+    /** Sends a message to the backend */
     while (get(messageStore).find(m => m.id === message.id)) {
         // If several messages are being sent the m.id is updated to the first negative number that is not stored inside messageStore
         message.id -= 1;
@@ -25,19 +39,17 @@ export async function postMessage(message: Message) {
     messageStore.addMessage(message);
 
     try {
-        // chat_id (nicht chatId!)
         const responseJson = await window.frontendAPI.sendMessage(get(activeChat).chat_id, message.content);
         
-        // Ersetzt die Dummy-ID durch die echte ID aus der DB und updatet den Status auf "OUTGOING_CREATED"
+        // Replaces the dummy id, with the real ID received from the backend
         messageStore.updateMessageAfterSend(message.id, responseJson.message_id, responseJson.status);
     } catch (error) {
         console.error("Fehler beim Senden der Nachricht:", error);
-        // Optional: Hier könnte man den Status der Nachricht auf "FAILED" setzen, falls du das ins UI einbaust
     }
 }
 
 export async function removeMessage(message: Message) {
-    // Optimistic UI Update: Zuerst lokal löschen
+    /** Deletes a message by removing it from the store and calling the api */
     messageStore.deleteMessage(message);
 
     try {
@@ -45,12 +57,13 @@ export async function removeMessage(message: Message) {
         if (responseJson.status !== "success") throw new Error("Backend meldet Fehler beim Löschen.");
     } catch (error) {
         console.error("Nachricht konnte nicht gelöscht werden:", error);
-        // Rollback: Nachricht wieder einfügen
+        // Rollback: Delete was not successful
         messageStore.addMessage(message); 
     }
 }
 
 export async function clearChat() {
+    /** Deletes all messages */
     const currentChatId = get(activeChat).chat_id;
     if (currentChatId === -1) return;    
 
@@ -71,20 +84,20 @@ export async function clearChat() {
 export async function updateAlias(id: number, newAlias: string) {
     const previousChat = get(activeChat);
 
-    // Optimistisches Update des aktiven Chats im UI
     activeChat.set({ ...previousChat, title: newAlias });
     
     try {
         await window.frontendAPI.updateContactAlias(id, newAlias);
-        await loadChats(); // Chatliste links ebenfalls aktualisieren
+        await loadChats(); // update ChatBar
     } catch (error) {
         console.error("Alias konnte nicht geändert werden:", error);
-        // Rollback bei Fehler: vorherigen Zustand wiederherstellen
+        // Rollback: Update not successful
         activeChat.set(previousChat);
     }
 }
 
 export async function deleteContact(){
+    /** deletes a Contact, by calling the API and updating after success */
     const currentChat = get(activeChat);
     if (currentChat.chat_id === -1) return;
 
@@ -108,6 +121,7 @@ export async function deleteContact(){
 }
 
 export async function exportContent(exportPW: string, includeChats: boolean){
+    /** Function to call the export API-Call */
     try {
         const responseJson = await window.frontendAPI.export(exportPW, includeChats);
         if (responseJson.status === "success") {

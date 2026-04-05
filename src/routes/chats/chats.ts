@@ -39,7 +39,9 @@ export function processSyncData(syncData: SyncResponse) {
         chatStore.updateLastMessage(newMsg.chat_id, newMsg);
         
         if (get(activeChat).chat_id === newMsg.chat_id) {
+            newMsg.status = "INCOMING_READ";
             messageStore.addMessage(newMsg);
+            chatStore.updateLastMessage(get(activeChat).chat_id, newMsg);
         }
     }
 
