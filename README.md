@@ -106,5 +106,5 @@ aether-frontend/
 ├── .gitignore
 ├── .npmrc                    # Enforces Node.js version during npm install
 ├── *config.js(on)            # Config files of the modules used
-└── package.json              
+└── package.json
 ```
