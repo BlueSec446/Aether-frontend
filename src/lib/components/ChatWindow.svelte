@@ -1,7 +1,7 @@
 <script lang="ts">
   import { onMount, tick } from 'svelte';
   import type { Message } from '$lib/interfaces/objects';
-  import { clearChat, deleteContact, loadChat, postMessage } from './chat_window';
+  import { clearChat, deleteContact, exportContent, loadChat, postMessage, updateAlias } from './chat_window';
   import { messageStore } from '$lib/stores/messages_store';
   import { activeChat } from '$lib/stores/active_chat_store';
 
@@ -15,6 +15,11 @@
   let inputText = '';
   let isLoading = false;
   let isMenuOpen = false; // Used to display the menu correctly
+  let isAliasModalOpen = false; // To display change alias modal
+  let newAliasInput = "";
+  let isExportModalOpen = false;
+  let exportPassword = '';
+  let includeChatHistory = true;
   let chatContainer: HTMLElement; // Used for auto-scrolling
   let textAreaElement: HTMLTextAreaElement; // auto-increase of the textbox
 
@@ -96,14 +101,55 @@
     isMenuOpen = false;
   }
 
-  function handleChangeAlias() {
-    closeMenu();
-    console.log('Change Alias clicked');
+  function openAliasModal(event: MouseEvent) {
+      event.stopPropagation(); // Prevent the clickOutside from instantly firing
+      closeMenu();
+      isAliasModalOpen = true;
+    }
+  
+  function closeAliasModal(){
+    isAliasModalOpen = false;
+    newAliasInput = "";
   }
 
-  function handleExportChat() {
+  function handleAliasKeydown(event: KeyboardEvent) {
+    if (event.key === 'Enter') {
+      event.preventDefault(); // Prevent accidental newlines or form refreshes
+      submitAliasChange();
+    }
+  }
+
+  async function submitAliasChange(){
+    if (!newAliasInput.trim()) return;
+
+    await updateAlias($activeChat.contact_ids[0].contact_id, newAliasInput);
+    closeAliasModal();
+  }
+
+function openExportModal(event: MouseEvent) {
+    event.stopPropagation();
     closeMenu();
-    console.log('Export Chat clicked');
+    isExportModalOpen = true;
+  }
+
+  function closeExportModal() {
+    isExportModalOpen = false;
+    exportPassword = '';
+    includeChatHistory = true;
+  }
+
+  async function submitExport() {
+    if (!exportPassword.trim()) return;
+
+    await exportContent(exportPassword, includeChatHistory);
+    closeExportModal();
+  }
+
+  function handleExportKeydown(event: KeyboardEvent) {
+    if (event.key === 'Enter') {
+      event.preventDefault();
+      submitExport();
+    }
   }
 
   // Functions to resize the height of the textbox
@@ -128,13 +174,52 @@
 
       {#if isMenuOpen}
         <div class="dropdown">
-          <button on:click={handleChangeAlias}>Change Alias</button>
-          <button on:click={handleExportChat}>Export Chat</button>
+          <button on:click={openAliasModal}>Change Alias</button>
+          <button on:click={openExportModal}>Export Chat</button>
           <button on:click={clearChat}>Clear Chat</button>
           <button class="delete-btn" on:click={deleteContact}>Delete Contact</button>
         </div>
       {/if}
     </div>
+
+    {#if isAliasModalOpen}
+      <div class="alias-modal" use:clickOutside={closeAliasModal}>
+        <h3>Change Alias</h3>
+        <div class="orange-divider"></div>
+      
+        <div class="form-group">
+          <label for="new-alias">New Alias</label>
+          <input id="new-alias" bind:value={newAliasInput} on:keydown={handleAliasKeydown} placeholder="Enter new name..." autocomplete="off" />
+        </div>
+
+        <button class="submit-btn" on:click={submitAliasChange}>Save</button>
+      </div>
+    {/if}
+
+    {#if isExportModalOpen}
+      <div class="alias-modal" use:clickOutside={closeExportModal}>
+        <h3>Export Chat</h3>
+        <div class="orange-divider"></div>
+      
+        <div class="form-group">
+          <label for="export-pw">Encryption Password</label>
+          <input 
+            id="export-pw" type="password" bind:value={exportPassword} on:keydown={handleExportKeydown} placeholder="Min. 8 characters..." autocomplete="new-password"
+          />
+        </div>
+
+        <div class="checkbox-group">
+          <input 
+            id="include-chats" 
+            type="checkbox" 
+            bind:checked={includeChatHistory} 
+          />
+          <label for="include-chats">Include message history</label>
+        </div>
+
+        <button class="submit-btn" on:click={submitExport}>Export</button>
+      </div>
+    {/if}
   </div>
 
   <div class="chat-window" bind:this={chatContainer}>
@@ -288,6 +373,103 @@
     color: white;
   }
 
+  /* Alias Modal Styling */
+  .alias-modal {
+    position: absolute;
+    top: 50px;
+    right: 1.5rem; /* Anchors it cleanly to the right side under the menu */
+    width: 320px;
+    background-color: var(--color-bg-panel);
+    border: 1px solid var(--color-text-dark);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    padding: 1.5rem;
+    z-index: 100;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .alias-modal h3 {
+    margin: 0;
+    font-size: 1.1rem;
+    color: var(--color-text-dark);
+    font-weight: normal;
+  }
+
+  .orange-divider {
+    height: 2px;
+    background-color: var(--color-primary);
+    margin: 0.5rem 0 1rem 0;
+  }
+
+  .form-group {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 1rem;
+  }
+
+  .form-group label {
+    font-size: 0.85rem;
+    color: var(--color-text-dark);
+    margin-bottom: 0.4rem;
+  }
+
+  .form-group input {
+    padding: 0.5rem;
+    border: 1px solid var(--color-text-muted);
+    border-radius: 0;
+    font-family: inherit;
+    color: var(--color-text-dark);
+    background-color: var(--color-bg-white);
+  }
+
+  .form-group input:focus {
+    outline: none;
+    border-color: var(--color-primary);
+  }
+
+  .submit-btn {
+    align-self: flex-start;
+    background-color: var(--color-primary);
+    color: var(--color-text-light);
+    padding: 0.5rem 1.5rem;
+    border: none;
+    border-radius: var(--border-radius-sm);
+    font-weight: bold;
+    font-size: 1rem;
+    cursor: pointer;
+    margin-top: 0.5rem;
+    transition: transform var(--transition-speed) ease;
+  }
+
+  /* Checkbox specific styling to fit the modal theme */
+  .checkbox-group {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+    cursor: pointer;
+  }
+
+  .checkbox-group input {
+    cursor: pointer;
+    width: 16px;
+    height: 16px;
+    accent-color: var(--color-primary);
+  }
+
+  .checkbox-group label {
+    font-size: 0.85rem;
+    color: var(--color-text-dark);
+    cursor: pointer;
+    user-select: none;
+  }
+
+  /* Ensure inputs in modals have consistent widths */
+  .form-group input {
+    width: 100%;
+    box-sizing: border-box;
+  }
+  
   .empty-state {
     text-align: center;
     color: var(--color-text-light); /* Replaced white */

@@ -36,6 +36,7 @@ describe('Chat Window Controller', () => {
       export: vi.fn()
     };
 
+    window.alert = vi.fn();
     // Suppress console.errors in the test output so it stays clean
     consoleErrorMock = vi.spyOn(console, 'error').mockImplementation(() => {});
 
@@ -217,7 +218,7 @@ describe('Chat Window Controller', () => {
 
       const result = await exportContent('password123', true);
 
-      expect(result).toBe('/downloads/backup.zip');
+      expect(window.alert).toHaveBeenCalledWith('The exported file is available at: \n/downloads/backup.zip');
       expect(window.frontendAPI.export).toHaveBeenCalledWith('password123', true);
     });
 

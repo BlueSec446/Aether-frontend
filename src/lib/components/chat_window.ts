@@ -128,7 +128,7 @@ export async function exportContent(exportPW: string, includeChats: boolean) {
   try {
     const responseJson = await window.frontendAPI.export(exportPW, includeChats);
     if (responseJson.status === 'success') {
-      return responseJson.file_path;
+      alert(`The exported file is available at: \n${responseJson.file_path}`)
     } else {
       throw new Error(responseJson.message || 'Export fehlgeschlagen.');
     }
