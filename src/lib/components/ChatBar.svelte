@@ -1,15 +1,10 @@
 <script lang="ts">
-  import type { ChatBarArray } from '$lib/interfaces/interfaces';
-
-  export let chats: ChatBarArray = [];
-  export let activeChatId: string = '';
-
-  export let onSelect: (id: string) => void = () => {};
-  export let onAddChat: (alias: string, onion: string) => void = () => {};
+  import { activeChat } from '$lib/stores/active_chat_store';
+  import { userStore } from '$lib/stores/user_store';
+  import { chatStore } from '$lib/stores/chat_store';
+  import { onAddChat } from './chat_bar';
 
   // User Account Information
-  export let userAlias: string = 'MyLocalAlias'; 
-  export let userOnion: string = 'vww6yba14bd7szmgncyruucpgfkqahzddi37ktceo3ah7ngmcopnpyyd.onion';
   let isAccountModalOpen = false;
 
   function openAccountInfo(event: MouseEvent) {
@@ -46,6 +41,13 @@
     closeModal();
   }
 
+  function handleKeydown(event: KeyboardEvent) {
+    if (event.key === 'Enter') {
+      event.preventDefault(); // Prevents potential form side-effects
+      submitNewChat();
+    }
+  }
+
   function clickOutside(node: HTMLElement, callback: () => void) {
     const handleClick = (event: MouseEvent) => {
       if (node && !node.contains(event.target as Node) && !event.defaultPrevented) {
@@ -66,11 +68,9 @@
     <h2>Chats</h2>
     <div class="header-actions">
       <button class="account" on:click={openAccountInfo} title="Account">
-        <img src='./src/lib/assets/user_icon.svg' alt="Account">
+        <img src="./src/lib/assets/user_icon.svg" alt="Account" />
       </button>
-      <button class="add-btn" on:click={openModal} title="New Chat">
-        +
-      </button>
+      <button class="add-btn" on:click={openModal} title="New Chat"> + </button>
     </div>
   </div>
 
@@ -81,12 +81,12 @@
 
       <div class="info-group">
         <label for="info-value">My Alias</label>
-        <div id= "info-value" class="info-value">{userAlias}</div>
+        <div id="info-value" class="info-value">{$userStore.display_name}</div>
       </div>
 
       <div class="info-group">
         <label for="onion">My Onion Address</label>
-        <div id="onion" class="info-value onion-text">{userOnion}</div>
+        <div id="onion" class="info-value onion-text">{$userStore.onion_address}</div>
       </div>
     </div>
   {/if}
@@ -95,15 +95,27 @@
     <div class="new-chat-modal" use:clickOutside={closeModal}>
       <h3>New Chat</h3>
       <div class="orange-divider"></div>
-    
+
       <div class="form-group">
         <label for="alias">Alias</label>
-        <input id="alias" bind:value={newAlias} placeholder="johndoe" autocomplete="off" />
+        <input
+          id="alias"
+          bind:value={newAlias}
+          on:keydown={handleKeydown}
+          placeholder="johndoe"
+          autocomplete="off"
+        />
       </div>
 
       <div class="form-group">
         <label for="onion">Onion Address</label>
-        <input id="onion" bind:value={newOnion} placeholder="vww6yba..." autocomplete="off" />
+        <input
+          id="onion"
+          bind:value={newOnion}
+          on:keydown={handleKeydown}
+          placeholder="vww6yba..."
+          autocomplete="off"
+        />
       </div>
 
       <button class="submit-btn" on:click={submitNewChat}>Chat</button>
@@ -111,19 +123,20 @@
   {/if}
 
   <div class="seperation"></div>
-  
+
   <div class="chat-list">
-    {#if chats.length === 0}
+    {#if $chatStore.length === 0}
       <div class="empty-text">No chats yet.</div>
     {/if}
 
-    {#each chats as chat}
-      <button 
-        class="chat-item" 
-        class:active={chat.chatId === activeChatId}
-        on:click={() => onSelect(chat.chatId)} >
-        <span class="alias">{chat.alias}</span>
-        
+    {#each $chatStore as chat}
+      <button
+        class="chat-item"
+        class:active={chat.chat_id === $activeChat?.chat_id}
+        on:click={() => ($activeChat = chat)}
+      >
+        <span class="alias">{chat.is_group ? chat.title : chat.display_name}</span>
+
         {#if chat.last_message && chat.last_message.status === 'INCOMING_UNREAD'}
           <span class="unread-dot"></span>
         {/if}
@@ -138,12 +151,12 @@
     width: 20%;
     display: flex;
     flex-direction: column;
-    background-color: var(--color-bg-panel); 
+    background-color: var(--color-bg-panel);
     border-right: 2px solid var(--color-text-dark);
     flex-shrink: 0;
     height: 100%;
   }
-  
+
   .header {
     background-color: var(--color-secondary);
     display: flex;
@@ -155,9 +168,9 @@
   .header-actions {
     display: flex;
     align-items: right;
-    gap: 0.8rem; 
+    gap: 0.8rem;
     margin-right: 1rem;
-    height: 100%; 
+    height: 100%;
   }
 
   .account {
@@ -168,10 +181,10 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    height: 100%; 
+    height: 100%;
   }
 
-  .account img{
+  .account img {
     height: 60%;
     max-height: 100%;
     width: auto;
@@ -181,7 +194,7 @@
   .add-btn {
     background: transparent;
   }
-  
+
   .account-info-modal {
     position: absolute;
     top: 50px;
@@ -281,12 +294,16 @@
     font-size: 1rem;
     cursor: pointer;
     margin-top: 0.5rem;
-  } 
+  }
 
   .seperation {
     height: 1%;
     width: 100%;
     background-color: var(--color-bg-panel);
+  }
+
+  .empty-text {
+    color: var(--color-secondary);
   }
 
   .chat-item {
@@ -301,12 +318,12 @@
   }
 
   .chat-item:hover {
-    transform: none; 
-    filter: brightness(0.90); /* Just slightly darkens it on hover */
+    transform: none;
+    filter: brightness(0.9); /* Just slightly darkens it on hover */
   }
-  
+
   .chat-item.active {
-    background-color: var(--color-secondary); 
+    background-color: var(--color-secondary);
     color: var(--color-text-light);
   }
 
@@ -315,7 +332,7 @@
     height: 12px;
     background-color: var(--color-primary);
     border-radius: 50%;
-    
+
     /* Absolute positioning to pin it to the right side of the button */
     position: absolute;
     right: 1.5rem; /* Keeps it perfectly aligned on the right edge */

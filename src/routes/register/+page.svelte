@@ -1,13 +1,11 @@
-<svelte:head>
-  <title>Register</title>
-</svelte:head>
-
 <script lang="ts">
-  import { postRegister } from "./register"
-   
-  let username = "";
-  let password = "";
-  let confirmPassword = "";
+  import { resolve } from '$app/paths';
+  import { postRegister } from './register';
+
+  let username = '';
+  let password = '';
+  let confirmPassword = '';
+  let isLoading = false;
 
   // --- PASSWORD POLICY CHECKS ---
   $: hasLength = password.length >= 8;
@@ -19,16 +17,19 @@
   $: isPasswordStrong = hasLength && hasUpper && hasLower && hasNumber && hasSpecial;
 
   // Reactively checks that no fields are empty AND the password is strong AND both passwords match
-  $: isValid = 
+  $: isValid =
     username.trim().length > 0 &&
     isPasswordStrong &&
-    password.length > 0 && 
+    password.length > 0 &&
     password === confirmPassword;
 </script>
 
+<svelte:head>
+  <title>Register</title>
+</svelte:head>
+
 <div class="auth-container">
   <form class="auth-form">
-    
     <div class="form-header">
       <h2>Register</h2>
       <div class="orange-divider"></div>
@@ -36,34 +37,34 @@
 
     <div class="form-group">
       <label for="username">Alias</label>
-      <input 
-        id="username" 
-        type="text" 
-        bind:value={username} 
-        placeholder="johndoe" 
-        autocomplete="username" 
+      <input
+        id="username"
+        type="text"
+        bind:value={username}
+        placeholder="johndoe"
+        autocomplete="username"
       />
     </div>
 
     <div class="form-group">
       <label for="password">Password</label>
-      <input 
-        id="password" 
-        type="password" 
-        bind:value={password} 
-        placeholder="******************" 
-        autocomplete="new-password" 
+      <input
+        id="password"
+        type="password"
+        bind:value={password}
+        placeholder="******************"
+        autocomplete="new-password"
       />
     </div>
 
     <div class="form-group">
       <label for="confirm-password">Confirm Password</label>
-      <input 
-        id="confirm-password" 
-        type="password" 
-        bind:value={confirmPassword} 
-        placeholder="******************" 
-        autocomplete="new-password" 
+      <input
+        id="confirm-password"
+        type="password"
+        bind:value={confirmPassword}
+        placeholder="******************"
+        autocomplete="new-password"
       />
     </div>
 
@@ -76,22 +77,23 @@
     </ul>
 
     <div class="warning-text">
-      <strong>Warning:</strong> <p>Passwords cannot be recovered or reset.</p><p>Please store it safely!</p>
+      <strong>Warning:</strong>
+      <p>Passwords cannot be recovered or reset.</p>
+      <p>Please store it safely!</p>
     </div>
 
     <div class="button-container">
-      <button 
-        disabled={!isValid} 
-        on:click|preventDefault={() => postRegister(username, password)}
+      <button
+        disabled={!isValid && isLoading}
+        on:click|preventDefault={() => postRegister(username, password)} // Needs to update isLoading and handle error messages
       >
         Register
       </button>
     </div>
 
     <div class="link-container">
-      <a href="/login">Already have an account? Login</a>
+      <a href={resolve('/login')}>Already have an account? Login</a>
     </div>
-
   </form>
 </div>
 
@@ -101,7 +103,7 @@
     justify-content: center;
     align-items: center;
     height: 100vh;
-    background-color: var(--color-bg-main); 
+    background-color: var(--color-bg-main);
   }
 
   .auth-form {
@@ -109,7 +111,7 @@
     max-width: 380px;
     display: flex;
     flex-direction: column;
-    gap: 1.5rem; 
+    gap: 1.5rem;
   }
 
   .form-header h2 {
@@ -143,7 +145,7 @@
   }
 
   .button-container button {
-    width: 140px; 
+    width: 140px;
     font-size: 1.1rem;
   }
 
@@ -183,7 +185,7 @@
 
   /* Adds a tiny empty circle bullet point */
   .password-hints li::before {
-    content: "○";
+    content: '○';
     margin-right: 0.4rem;
     font-size: 0.7rem;
   }
@@ -199,7 +201,7 @@
 
   /* Changes the empty circle to a solid dot/checkmark when met */
   .password-hints li.met::before {
-    content: "●"; 
+    content: '●';
     color: var(--color-primary);
   }
 

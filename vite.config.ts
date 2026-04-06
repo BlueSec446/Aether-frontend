@@ -1,20 +1,27 @@
 import { sveltekit } from '@sveltejs/kit/vite';
-import { defineConfig } from 'vite';
+import { defineConfig } from 'vitest/config';
 
 export default defineConfig({
-	plugins: [sveltekit()],
-	server: {
-		host: true,
-		port: 5173,
+  plugins: [sveltekit()],
+  resolve: {
+    conditions: ['mode', 'browser'] // only handle as browser not as server
+  },
+  test: {
+    environment: 'jsdom',
+    globals: true
+  },
+  server: {
+    host: true,
+    port: 5173,
 
-		watch: {
-			usePolling: true,
-			interval: 100
-		},
-		
-		hmr: {
-			host: 'localhost',
-			protocol: 'ws',
-		}
-	}
+    watch: {
+      usePolling: true,
+      interval: 100
+    },
+
+    hmr: {
+      host: 'localhost',
+      protocol: 'ws'
+    }
+  }
 });

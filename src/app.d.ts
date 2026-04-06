@@ -1,13 +1,16 @@
-// See https://svelte.dev/docs/kit/types#app.d.ts
-// for information about these interfaces
+// Defines interfaces for global Context
+import type { FrontendAPI } from '$lib/interfaces/frontendAPI';
 declare global {
-	namespace App {
-		// interface Error {}
-		// interface Locals {}
-		// interface PageData {}
-		// interface PageState {}
-		// interface Platform {}
-	}
+  interface Window {
+    frontendAPI: FrontendAPI;
+  }
+  namespace App {
+    // interface Error {}
+    // interface Locals {}
+    // interface PageData {}
+    // interface PageState {}
+    // interface Platform {}
+  }
 }
 
 export {};

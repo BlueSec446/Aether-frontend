@@ -1,9 +1,28 @@
-import type { ChatBarArray } from "$lib/interfaces/interfaces";
+import { activeChat } from '$lib/stores/active_chat_store';
+import { chatStore } from '$lib/stores/chat_store';
+import { get } from 'svelte/store';
+import { loadChats } from './chats_wrapper';
 
-export function sortChats(chats: ChatBarArray) {
-  const sortedChatBarArray = [...chats].sort((a,b) => {
-    return new Date(a.last_message.timestamp).getTime() - new Date(b.last_message.timestamp).getTime()
-  });
-  
-  return sortedChatBarArray;
+export async function onAddChat(alias: string, onionAddress: string) {
+  try {
+    const newContact = await window.frontendAPI.newContact(onionAddress, alias);
+
+    await loadChats();
+
+    if (newContact && newContact.id) {
+      const chats = get(chatStore);
+      const newChat = chats.find((chat) =>
+        chat.contact_ids?.some((contact) => contact.contact_id === newContact.id)
+      );
+
+      if (newChat) {
+        activeChat.set(newChat);
+      } else {
+        console.warn('Neuer Chat wurde nicht in der Chat-Liste gefunden.');
+      }
+    }
+  } catch (error) {
+    console.error('Fehler beim Hinzufügen des Kontakts:', error);
+    alert(`Kontakt konnte nicht hinzugefügt werden. \n${error}`);
+  }
 }
