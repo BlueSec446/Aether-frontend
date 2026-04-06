@@ -9,15 +9,12 @@
     postMessage,
     removeMessage,
     updateAlias
-  } from './chat_window';
+  } from '../controllers/chat_window';
   import { messageStore } from '$lib/stores/messages_store';
   import { activeChat } from '$lib/stores/active_chat_store';
 
   onMount(async () => {
     await loadChat();
-    $messageStore.forEach((msg) => {
-      console.log(msg);
-    });
   });
 
   let inputText = '';

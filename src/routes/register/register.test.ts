@@ -9,7 +9,6 @@ vi.mock('$app/navigation', () => ({
 
 describe('Register Controller', () => {
   let consoleErrorMock: ReturnType<typeof vi.spyOn>;
-  let consoleLogMock: ReturnType<typeof vi.spyOn>;
 
   beforeEach(() => {
     // Inject context bridge facade
@@ -19,7 +18,6 @@ describe('Register Controller', () => {
 
     window.alert = vi.fn();
     consoleErrorMock = vi.spyOn(console, 'error').mockImplementation(() => {});
-    consoleLogMock = vi.spyOn(console, 'log').mockImplementation(() => {});
   });
 
   afterEach(() => {
@@ -36,10 +34,6 @@ describe('Register Controller', () => {
     await postRegister('NewUser', 'SecurePass123');
 
     expect(window.frontendAPI.register).toHaveBeenCalledWith('NewUser', 'SecurePass123');
-    expect(consoleLogMock).toHaveBeenCalledWith(
-      'Registration successful! Your Onion Address:',
-      'onion_vww6yba...'
-    );
     expect(goto).toHaveBeenCalledWith('/login');
   });
 

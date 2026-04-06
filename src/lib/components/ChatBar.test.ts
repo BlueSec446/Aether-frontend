@@ -6,11 +6,11 @@ import ChatBar from './ChatBar.svelte';
 import { activeChat, DEFAULT_CHAT } from '$lib/stores/active_chat_store';
 import { chatStore } from '$lib/stores/chat_store';
 import { userStore } from '$lib/stores/user_store';
-import { onAddChat } from './chat_bar';
+import { onAddChat } from '../controllers/chat_bar';
 import type { Chat } from '$lib/interfaces/objects';
 
 // Intercept the controller logic
-vi.mock('./chat_bar', () => ({
+vi.mock('../controllers/chat_bar', () => ({
   onAddChat: vi.fn()
 }));
 

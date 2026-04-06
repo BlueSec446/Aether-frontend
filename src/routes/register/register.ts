@@ -10,7 +10,6 @@ export async function postRegister(username: string, password: string) {
       console.error('Registration failed');
       alert('Registration failed');
     } else {
-      console.log('Registration successful! Your Onion Address:', responseJson.onion_address);
       goto(resolve('/login')); // Open Login
     }
   } catch (error) {
