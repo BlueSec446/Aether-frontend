@@ -25,6 +25,8 @@ function createWindow() {
   // DEV MODE: Load the URL where Vite is serving Svelte
   if (process.env.NODE_ENV === 'development') {
     mainWindow.loadURL('http://localhost:5173');
+    const startUrl = process.env.FRONTEND_URL || 'http://localhost:5173';
+    mainWindow.loadURL(startUrl);
     mainWindow.webContents.openDevTools(); // Open Console automatically
   }
   // PROD MODE: Load the static HTML file built by Svelte
