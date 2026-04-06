@@ -120,7 +120,7 @@ contextBridge.exposeInMainWorld('frontendAPI', {
   deleteMessage: (messageId) =>
     // Deletes a specific message
     apiCall(`/messages/${messageId}`, {
-      method: 'POST'
+      method: 'DELETE'
     }),
 
   // System, Polling & Export

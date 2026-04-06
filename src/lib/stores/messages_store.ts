@@ -27,7 +27,7 @@ function createMessageStore() {
         if (messages.find((m) => m.id === message.id)) {
           return messages;
         }
-        return [...messages, message];
+        return sortMessages([...messages, message]);
       }),
 
     updateMessageAfterSend: (oldId: number, messageId: number, status: MessageStatus) =>

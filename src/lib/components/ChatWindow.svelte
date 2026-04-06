@@ -7,6 +7,7 @@
     exportContent,
     loadChat,
     postMessage,
+    removeMessage,
     updateAlias
   } from './chat_window';
   import { messageStore } from '$lib/stores/messages_store';
@@ -27,10 +28,11 @@
   let isExportModalOpen = false;
   let exportPassword = '';
   let includeChatHistory = true;
+  let activeMessageMenuId: number | null = null;
   let chatContainer: HTMLElement; // Used for auto-scrolling
   let textAreaElement: HTMLTextAreaElement; // auto-increase of the textbox
 
-  // --- 2. API CALL & LOGIC ---
+  // --- API CALL & LOGIC ---
   async function sendMessage() {
     if (!inputText.trim() || isLoading) return;
 
@@ -81,7 +83,6 @@
   }
 
   // Functions to handle the menu inside of the Header
-
   function clickOutside(node: HTMLElement, callback: () => void) {
     // Close the menu if the user clicks Outside of the menu
     const handleClick = (event: MouseEvent) => {
@@ -108,6 +109,7 @@
     isMenuOpen = false;
   }
 
+  // Functions to change Alias
   function openAliasModal(event: MouseEvent) {
     event.stopPropagation(); // Prevent the clickOutside from instantly firing
     closeMenu();
@@ -133,6 +135,7 @@
     closeAliasModal();
   }
 
+  // Functions to call Export
   function openExportModal(event: MouseEvent) {
     event.stopPropagation();
     closeMenu();
@@ -157,6 +160,22 @@
       event.preventDefault();
       submitExport();
     }
+  }
+
+  function toggleMessageMenu(id: number, event: MouseEvent) {
+    event.stopPropagation();
+    // If clicking the same one, close it; otherwise, open the new one
+    activeMessageMenuId = activeMessageMenuId === id ? null : id;
+  }
+
+  function closeAllMessageMenus() {
+    activeMessageMenuId = null;
+  }
+
+  async function handleDeleteMessage(messageId: number) {
+    const delMessage = $messageStore.find((m) => m.id === messageId);
+    if (delMessage) await removeMessage(delMessage);
+    closeAllMessageMenus();
   }
 
   // Functions to resize the height of the textbox
@@ -247,21 +266,39 @@
     {#each $messageStore as msg}
       {#if msg.sender_contact_id === null}
         <div class="message user">
-          <div class="bubble">
-            {msg.content}
-            <div class="message-time">{formatTime(msg.timestamp)}</div>
+          <div class="bubble-wrapper" use:clickOutside={closeAllMessageMenus}>
+            <div class="bubble">
+              {msg.content}
+              <button class="msg-menu-btn" on:click={(e) => toggleMessageMenu(msg.id, e)}>
+                ▾
+              </button>
+
+              {#if activeMessageMenuId === msg.id}
+                <div class="msg-dropdown">
+                  <button on:click={() => handleDeleteMessage(msg.id)}>Delete</button>
+                </div>
+              {/if}
+              <div class="message-time">{formatTime(msg.timestamp)}</div>
+            </div>
+            {#if msg.status === 'OUTGOING_RECEIVED'}
+              <div class="status-symbol">&#10004;</div>
+            {/if}
+            {#if msg.status !== 'OUTGOING_RECEIVED'}
+              <div class="status-symbol">&#9634;</div>
+            {/if}
           </div>
-          {#if msg.status === 'OUTGOING_RECEIVED'}
-            <div class="status-symbol">&#10004;</div>
-          {/if}
-          {#if msg.status !== 'OUTGOING_RECEIVED'}
-            <div class="status-symbol">&#9634;</div>
-          {/if}
         </div>
       {:else}
         <div class="message contact">
           <div class="bubble">
             {msg.content}
+            <button class="msg-menu-btn" on:click={(e) => toggleMessageMenu(msg.id, e)}> ▾ </button>
+
+            {#if activeMessageMenuId === msg.id}
+              <div class="msg-dropdown">
+                <button on:click={() => handleDeleteMessage(msg.id)}>Delete</button>
+              </div>
+            {/if}
             <div class="message-time">{formatTime(msg.timestamp)}</div>
           </div>
         </div>
@@ -495,6 +532,7 @@
     display: flex;
     width: 100%;
     align-items: flex-end;
+    margin-bottom: 0.5rem; /* Space between bubbles */
   }
 
   .message.user {
@@ -505,37 +543,108 @@
     justify-content: flex-start;
   }
 
+  /* NEW: Anchor for the dropdown and status symbols */
+  .bubble-wrapper {
+    position: relative;
+    display: flex;
+    align-items: flex-end;
+    max-width: 70%; /* Match your bubble's max-width */
+  }
+
+  .message.user .bubble-wrapper {
+    flex-direction: row; /* Bubble then Status */
+  }
+
+  .message.contact .bubble-wrapper {
+    flex-direction: row-reverse; /* Status then Bubble (if status exists for contact) */
+  }
+
   .bubble {
-    max-width: 70%;
+    position: relative; /* Required for msg-menu-btn positioning */
     padding: 0.75rem 1rem;
-    border-radius: var(--border-radius-lg); /* Replaced 12px */
+    padding-right: 1.8rem; /* Extra space so text doesn't overlap the ▾ button */
+    border-radius: var(--border-radius-lg);
     line-height: 1.4;
-    white-space: pre-wrap; /* Preserves line breaks */
+    white-space: pre-wrap;
     overflow-wrap: break-word;
     word-break: break-word;
   }
 
   .message.user .bubble {
-    background-color: var(--color-primary); /* Replaced #fd6541 */
-    color: var(--color-text-light); /* Replaced white */
-    border-bottom-right-radius: var(--border-radius-sm); /* Replaced 4px */
+    background-color: var(--color-primary);
+    color: var(--color-text-light);
+    border-bottom-right-radius: var(--border-radius-sm);
   }
 
   .message.contact .bubble {
-    background-color: var(--color-secondary); /* Replaced #124050 */
-    color: var(--color-text-light); /* Replaced white */
-    border-bottom-left-radius: var(--border-radius-sm); /* Replaced 4px */
+    background-color: var(--color-secondary);
+    color: var(--color-text-light);
+    border-bottom-left-radius: var(--border-radius-sm);
+  }
+
+  /* --- Message Menu Elements --- */
+
+  .msg-menu-btn {
+    position: absolute;
+    top: 6px;
+    right: 8px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    font-size: 0.75rem;
+    color: inherit; /* Matches the bubble text color automatically */
+    opacity: 0;
+    transition: opacity 0.2s;
+    padding: 2px 4px;
+    line-height: 1;
+  }
+
+  .bubble:hover .msg-menu-btn {
+    opacity: 0.7;
+  }
+
+  .msg-dropdown {
+    position: absolute;
+    top: 25px;
+    right: 5px;
+    background-color: var(--color-bg-panel);
+    border: 1px solid var(--color-text-dark);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    z-index: 100;
+    border-radius: var(--border-radius-sm);
+    min-width: 100px;
+    overflow: hidden;
+  }
+
+  .msg-dropdown button {
+    display: block;
+    width: 100%;
+    padding: 0.6rem 1rem;
+    border: none;
+    background: transparent;
+    color: var(--color-primary);
+    font-size: 0.85rem;
+    cursor: pointer;
+    text-align: left;
+  }
+
+  .msg-dropdown button:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+  }
+
+  .status-symbol {
+    margin-left: 6px;
+    margin-right: 6px;
+    font-size: 0.8rem;
+    color: var(--color-primary);
+    flex-shrink: 0;
+    padding-bottom: 2px; /* Align with bottom of bubble */
   }
 
   .status-symbol {
     color: var(--color-primary);
     font-size: 1.5rem;
     margin-left: 0.5rem;
-  }
-
-  .typing {
-    font-style: italic;
-    opacity: 0.7;
   }
 
   .input-area {
