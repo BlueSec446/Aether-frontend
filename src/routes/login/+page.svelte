@@ -1,4 +1,7 @@
 <script lang="ts">
+  /**
+   * +page to show register UI and call login logic
+   */
   import { resolve } from '$app/paths';
   import { postLogin } from './login';
 

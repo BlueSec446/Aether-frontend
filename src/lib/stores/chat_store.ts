@@ -1,5 +1,9 @@
 /**
- * Globally accessible store of the chats
+ * @file Reactive store for the global list of active conversations.
+ * @description Serves as the centralized source of truth for the user's chat threads.
+ * By maintaining this state externally from the `ChatBar`, it ensures that background
+ * polling or incoming message events can silently update unread statuses, timestamps,
+ * and list sorting logic without needing to forcefully re-render the entire component.
  */
 import { writable, get } from 'svelte/store';
 import type { Chat, Message, MessageStatus } from '$lib/interfaces/objects';

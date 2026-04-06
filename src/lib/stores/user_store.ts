@@ -1,5 +1,10 @@
 /**
- * Globally available store to access and modify data about the current user
+ * @file Reactive store for the local user's profile and global application state.
+ * @description Manages the authenticated user's identity (e.g., their Onion Address,
+ * local alias, and system preferences). Decoupling this from the UI ensures that
+ * any component across the application—whether it's the settings modal, the profile
+ * header, or message bubbles determining if a message was sent by "me"—can reactively
+ * access the user's context without prop drilling.
  */
 import { writable } from 'svelte/store';
 import type { UserProfile } from '$lib/interfaces/objects';

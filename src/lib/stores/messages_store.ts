@@ -1,5 +1,9 @@
 /**
- * Store to hold the message array of the currently loaded chat
+ * @file Reactive store for the active conversation's message history.
+ * @description Manages the localized state of messages for the currently open chat.
+ * Encapsulates the array of message objects to enable optimistic UI updates
+ * (e.g., displaying a message bubble immediately upon hitting "Send" before
+ * the backend confirms) and smooth reactive rendering in the `ChatWindow`.
  */
 import { writable } from 'svelte/store';
 import type { Message, MessageStatus } from '$lib/interfaces/objects';

@@ -1,4 +1,8 @@
 <script lang="ts">
+  /**
+   * Combines ChatWindow and ChatBar to be displayed next to each other
+   * Handles sync() and loads the Chats on mount()
+   */
   import ChatBar from '$lib/components/ChatBar.svelte';
   import ChatWindow from '$lib/components/ChatWindow.svelte';
   import { onDestroy, onMount } from 'svelte';

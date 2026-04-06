@@ -1,4 +1,11 @@
 <script lang="ts">
+  /**
+   * Handles:
+   * - UI for the left Bar of Chats
+   * - Modal to display user info
+   * - Modal and Function call to add new Contact
+   *
+   */
   import { activeChat } from '$lib/stores/active_chat_store';
   import { userStore } from '$lib/stores/user_store';
   import { chatStore } from '$lib/stores/chat_store';

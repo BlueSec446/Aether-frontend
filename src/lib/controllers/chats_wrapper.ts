@@ -1,3 +1,10 @@
+/**
+ * @file Controller for the ChatsWrapper layout component.
+ * @description Serves as the central state coordinator for the chat interface.
+ * Orchestrates the data flow between the sidebar (`ChatBar`) and the active
+ * conversation (`ChatWindow`), and encapsulates background tasks such as polling
+ * for new messages and maintaining system status synchronization.
+ */
 import { get } from 'svelte/store';
 import type { Chat } from '$lib/interfaces/objects';
 import { chatStore } from '$lib/stores/chat_store';

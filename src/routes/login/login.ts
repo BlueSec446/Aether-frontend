@@ -1,3 +1,6 @@
+/**
+ * Handler for register page
+ */
 import { userStore } from '$lib/stores/user_store';
 import { goto } from '$app/navigation';
 import { resolve } from '$app/paths';

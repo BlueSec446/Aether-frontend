@@ -1,4 +1,7 @@
 <script lang="ts">
+  /**
+   * +page to show register UI and call register logic
+   */
   import { resolve } from '$app/paths';
   import { postRegister } from './register';
 

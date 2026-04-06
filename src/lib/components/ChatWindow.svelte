@@ -1,4 +1,12 @@
 <script lang="ts">
+  /**
+   * Handles:
+   * - UI for the active chat's message history and text input area
+   * - Header menu for chat-specific actions (Clear Chat, Delete Contact)
+   * - Modals and function calls to Change Alias and Export Chat
+   * - Individual message actions (dropdown menus to delete specific messages)
+   * - Chat UX logic (Auto-scrolling, dynamic textarea resizing, Enter to send)
+   */
   import { onMount, tick } from 'svelte';
   import type { Message } from '$lib/interfaces/objects';
   import {

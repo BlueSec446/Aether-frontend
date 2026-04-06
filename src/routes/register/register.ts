@@ -1,3 +1,6 @@
+/**
+ * Handler for register page
+ */
 import { goto } from '$app/navigation';
 import { resolve } from '$app/paths';
 

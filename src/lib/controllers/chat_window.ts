@@ -1,3 +1,10 @@
+/**
+ * @file Controller for the ChatWindow component.
+ * @description Manages the active conversation state and message-level interactions.
+ * Handles the orchestration of sending, receiving, and deleting messages via the backend,
+ * as well as isolating administrative tasks like updating contact aliases and exporting
+ * chat histories away from the UI thread.
+ */
 import type { Message } from '$lib/interfaces/objects';
 import { messageStore } from '$lib/stores/messages_store';
 import { activeChat, DEFAULT_CHAT } from '$lib/stores/active_chat_store';

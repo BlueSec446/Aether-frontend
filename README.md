@@ -1,6 +1,6 @@
 # Aether-Frontend
 
-This Repository handles all the frontend logic for [**Aether**](<(https://github.com/SevuCK/aether)>), the Tor Chat App.
+This Repository handles all the frontend logic for [**Aether**](https://github.com/SevuCK/aether), the Tor Chat App.
 
 # Project Setup & Overview
 
