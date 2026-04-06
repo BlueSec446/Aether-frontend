@@ -1,19 +1,14 @@
-<svelte:head>
-	<title>Chat Window</title>
-</svelte:head>
-
 <script lang="ts">
   import { onMount, tick } from 'svelte';
-  import type { Message, Chat } from '$lib/interfaces/objects';
-  import{ clearChat, deleteContact, loadChat, postMessage } from "./chat_window"
+  import type { Message } from '$lib/interfaces/objects';
+  import { clearChat, deleteContact, loadChat, postMessage } from './chat_window';
   import { messageStore } from '$lib/stores/messages_store';
   import { activeChat } from '$lib/stores/active_chat_store';
-
 
   onMount(async () => {
     await loadChat();
   });
-  
+
   let inputText = '';
   let isLoading = false;
   let isMenuOpen = false; // Used to display the menu correctly
@@ -25,7 +20,14 @@
     if (!inputText.trim() || isLoading) return;
 
     // Add user message to the UI instantly with no ID
-    let newMessage: Message = {id: -1, chat_id: $activeChat.chat_id, sender_contact_id: null, content: inputText, timestamp: new Date().toISOString(), status: "OUTGOING_CREATED"};
+    let newMessage: Message = {
+      id: -1,
+      chat_id: $activeChat.chat_id,
+      sender_contact_id: null,
+      content: inputText,
+      timestamp: new Date().toISOString(),
+      status: 'OUTGOING_CREATED'
+    };
 
     inputText = '';
     if (textAreaElement) {
@@ -54,21 +56,20 @@
   }
 
   function formatTime(timestamp: string) {
-    if (!timestamp) return "";
+    if (!timestamp) return '';
     const date = new Date(timestamp);
-    return date.toLocaleTimeString('de-DE', { 
-      hour: '2-digit', 
-      minute: '2-digit', 
-      hour12: false 
+    return date.toLocaleTimeString('de-DE', {
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: false
     });
   }
 
   // Functions to handle the menu inside of the Header
-  
+
   function clickOutside(node: HTMLElement, callback: () => void) {
     // Close the menu if the user clicks Outside of the menu
     const handleClick = (event: MouseEvent) => {
-
       if (node && !node.contains(event.target as Node) && !event.defaultPrevented) {
         callback();
       }
@@ -94,31 +95,33 @@
 
   function handleChangeAlias() {
     closeMenu();
-    console.log("Change Alias clicked");
+    console.log('Change Alias clicked');
   }
 
   function handleExportChat() {
     closeMenu();
-    console.log("Export Chat clicked");
+    console.log('Export Chat clicked');
   }
 
   // Functions to resize the height of the textbox
   function autoResize() {
     if (textAreaElement) {
-      textAreaElement.style.height = 'auto'; 
+      textAreaElement.style.height = 'auto';
       textAreaElement.style.height = textAreaElement.scrollHeight + 'px';
     }
   }
 </script>
+
+<svelte:head>
+  <title>Chat Window</title>
+</svelte:head>
 
 <div class="chat-layout">
   <div class="header">
     <h3>{$activeChat.is_group ? $activeChat.title : $activeChat.display_name}</h3>
 
     <div class="menu-container" use:clickOutside={closeMenu}>
-      <button class="menu-btn" on:click={toggleMenu} title="Menu">
-        &#8942; 
-      </button>
+      <button class="menu-btn" on:click={toggleMenu} title="Menu"> &#8942; </button>
 
       {#if isMenuOpen}
         <div class="dropdown">
@@ -139,19 +142,19 @@
       </div>
     {/if}
 
-    {#each $messageStore as msg}
+    {#each $messageStore as msg (msg.id)}
       {#if msg.sender_contact_id === null}
         <div class="message user">
           <div class="bubble">
             {msg.content}
             <div class="message-time">{formatTime(msg.timestamp)}</div>
           </div>
-            {#if msg.status === "OUTGOING_RECEIVED"}
-              <div class="status-symbol">&#10004;</div>
-            {/if}
-            {#if msg.status !== "OUTGOING_RECEIVED"}
-              <div class="status-symbol">&#9634;</div>
-            {/if}
+          {#if msg.status === 'OUTGOING_RECEIVED'}
+            <div class="status-symbol">&#10004;</div>
+          {/if}
+          {#if msg.status !== 'OUTGOING_RECEIVED'}
+            <div class="status-symbol">&#9634;</div>
+          {/if}
         </div>
       {:else}
         <div class="message contact">
@@ -163,19 +166,19 @@
       {/if}
     {/each}
   </div>
-  
+
   <div class="input-area">
-    <textarea 
-    bind:this={textAreaElement}
-    bind:value={inputText} 
-    on:keydown={handleKeydown}
-    on:input={autoResize}
-    placeholder="Type your message..."
-    rows="1"
-    disabled={isLoading}
+    <textarea
+      bind:this={textAreaElement}
+      bind:value={inputText}
+      on:keydown={handleKeydown}
+      on:input={autoResize}
+      placeholder="Type your message..."
+      rows="1"
+      disabled={isLoading}
     ></textarea>
     <button class="send-button" on:click={sendMessage} disabled={isLoading || !inputText.trim()}>
-    <img src='./src/lib/assets/Send_Icon.png' alt="Send">
+      <img src="./src/lib/assets/Send_Icon.png" alt="Send" />
     </button>
   </div>
 </div>
@@ -242,7 +245,7 @@
   .dropdown {
     position: absolute;
     top: 100%; /* Positions it right below the 3-dot button */
-    right: 0;    /* Aligns it to the right edge */
+    right: 0; /* Aligns it to the right edge */
     background-color: var(--color-bg-panel); /* Light grey from mockup */
     border: 1px solid var(--color-text-dark);
     display: flex;
@@ -274,7 +277,7 @@
 
   /* Specific styling for the Delete button to match the mockup */
   .dropdown .delete-btn {
-    color: var(--color-primary); 
+    color: var(--color-primary);
     font-weight: bold;
   }
 
@@ -309,7 +312,7 @@
     border-radius: var(--border-radius-lg); /* Replaced 12px */
     line-height: 1.4;
     white-space: pre-wrap; /* Preserves line breaks */
-    overflow-wrap: break-word; 
+    overflow-wrap: break-word;
     word-break: break-word;
   }
 
@@ -355,7 +358,9 @@
     color: var(--color-text-dark);
     font-family: inherit;
     outline: none;
-    transition: border-color var(--transition-speed) ease, box-shadow var(--transition-speed) ease;
+    transition:
+      border-color var(--transition-speed) ease,
+      box-shadow var(--transition-speed) ease;
     min-height: 44px;
     max-height: 150px;
     overflow-y: auto;
@@ -378,7 +383,9 @@
     border-radius: 10%;
     font-weight: bold;
     cursor: pointer;
-    transition: background-color var(--transition-speed) ease, transform var(--transition-speed) ease;
+    transition:
+      background-color var(--transition-speed) ease,
+      transform var(--transition-speed) ease;
   }
 
   .send-button img {
@@ -393,7 +400,8 @@
     filter: brightness(1.1); /* Applied the global button hover effect */
   }
 
-  button:disabled, textarea:disabled {
+  button:disabled,
+  textarea:disabled {
     opacity: 0.6;
     cursor: not-allowed;
   }

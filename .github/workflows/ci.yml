@@ -7,7 +7,7 @@ on:
     paths-ignore:
       - '**.md'
   pull_request:
-    branches: [ main ]
+    branches: [main]
 
 jobs:
   frontend-checks:
@@ -31,5 +31,5 @@ jobs:
       - name: Lint with ESLint & Prettier
         run: npm run lint
 
-      - name: Run Frontend Tests (Jest)
+      - name: Run Frontend Tests (vitest)
         run: npm run test

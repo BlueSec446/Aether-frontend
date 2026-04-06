@@ -1,28 +1,28 @@
-import { activeChat } from "$lib/stores/active_chat_store";
-import { chatStore } from "$lib/stores/chat_store";
-import { get } from "svelte/store";
-import { loadChats } from "../../routes/chats/chats";
+import { activeChat } from '$lib/stores/active_chat_store';
+import { chatStore } from '$lib/stores/chat_store';
+import { get } from 'svelte/store';
+import { loadChats } from './chats_wrapper';
 
-export async function onAddChat(alias: string, onionAddress: string){
+export async function onAddChat(alias: string, onionAddress: string) {
   try {
-      const newContact = await window.frontendAPI.newContact(onionAddress, alias);
-      
-      await loadChats(); 
+    const newContact = await window.frontendAPI.newContact(onionAddress, alias);
 
-      if (newContact && newContact.id) {
-          const chats = get(chatStore);
-          const newChat = chats.find(chat => 
-            chat.contact_ids?.some(contact => contact.contact_id === newContact.id)
-          );
-          
-          if (newChat) {
-            activeChat.set(newChat);
-          } else {
-            console.warn("Neuer Chat wurde nicht in der Chat-Liste gefunden.");
-          }
+    await loadChats();
+
+    if (newContact && newContact.id) {
+      const chats = get(chatStore);
+      const newChat = chats.find((chat) =>
+        chat.contact_ids?.some((contact) => contact.contact_id === newContact.id)
+      );
+
+      if (newChat) {
+        activeChat.set(newChat);
+      } else {
+        console.warn('Neuer Chat wurde nicht in der Chat-Liste gefunden.');
       }
+    }
   } catch (error) {
-      console.error("Fehler beim Hinzufügen des Kontakts:", error);
-      alert("Kontakt konnte nicht hinzugefügt werden.");
+    console.error('Fehler beim Hinzufügen des Kontakts:', error);
+    alert('Kontakt konnte nicht hinzugefügt werden.');
   }
 }

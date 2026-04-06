@@ -1,20 +1,20 @@
-<svelte:head>
-	<title>Login</title>
-</svelte:head>
-
 <script lang="ts">
-  import {postLogin} from "./login"
+  import { resolve } from '$app/paths';
+  import { postLogin } from './login';
 
-  let username = "";
-  let password = "";
+  let username = '';
+  let password = '';
   let isLoading = false;
 
   $: isValid = username.length !== 0 && password.length !== 0;
 </script>
 
+<svelte:head>
+  <title>Login</title>
+</svelte:head>
+
 <div class="auth-container">
   <form class="auth-form">
-    
     <div class="form-header">
       <h2>Login</h2>
       <div class="orange-divider"></div>
@@ -22,29 +22,29 @@
 
     <div class="form-group">
       <label for="username">Alias</label>
-      <input 
-        id="username" 
-        type="text" 
-        bind:value={username} 
-        placeholder="johndoe" 
-        autocomplete="username" 
+      <input
+        id="username"
+        type="text"
+        bind:value={username}
+        placeholder="johndoe"
+        autocomplete="username"
       />
     </div>
 
     <div class="form-group">
       <label for="password">Password</label>
-      <input 
-        id="password" 
-        type="password" 
-        bind:value={password} 
-        placeholder="******************" 
-        autocomplete="current-password" 
+      <input
+        id="password"
+        type="password"
+        bind:value={password}
+        placeholder="******************"
+        autocomplete="current-password"
       />
     </div>
 
     <div class="button-container">
-      <button 
-        disabled={!isValid && isLoading} 
+      <button
+        disabled={!isValid && isLoading}
         on:click|preventDefault={() => postLogin(username, password)} // Needs to update isLoading and handle error messages
       >
         Login
@@ -52,10 +52,9 @@
     </div>
 
     <div class="link-container">
-      <a href="/register">Create an account</a>
+      <a href={resolve('/register')}>Create an account</a>
     </div>
-
-</form>
+  </form>
 </div>
 
 <style>
@@ -65,7 +64,7 @@
     justify-content: center;
     align-items: center;
     height: 100vh;
-    background-color: var(--color-bg-main); 
+    background-color: var(--color-bg-main);
   }
 
   /* Constrains the form width to match the mockup */

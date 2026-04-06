@@ -1,8 +1,8 @@
 <script lang="ts">
-  import { activeChat } from '$lib/stores/active_chat_store'; 
+  import { activeChat } from '$lib/stores/active_chat_store';
   import { userStore } from '$lib/stores/user_store';
   import { chatStore } from '$lib/stores/chat_store';
-    import { onAddChat } from './chat_bar';
+  import { onAddChat } from './chat_bar';
 
   // User Account Information
   let isAccountModalOpen = false;
@@ -61,11 +61,9 @@
     <h2>Chats</h2>
     <div class="header-actions">
       <button class="account" on:click={openAccountInfo} title="Account">
-        <img src='./src/lib/assets/user_icon.svg' alt="Account">
+        <img src="./src/lib/assets/user_icon.svg" alt="Account" />
       </button>
-      <button class="add-btn" on:click={openModal} title="New Chat">
-        +
-      </button>
+      <button class="add-btn" on:click={openModal} title="New Chat"> + </button>
     </div>
   </div>
 
@@ -76,7 +74,7 @@
 
       <div class="info-group">
         <label for="info-value">My Alias</label>
-        <div id= "info-value" class="info-value">{$userStore.display_name}</div>
+        <div id="info-value" class="info-value">{$userStore.display_name}</div>
       </div>
 
       <div class="info-group">
@@ -90,7 +88,7 @@
     <div class="new-chat-modal" use:clickOutside={closeModal}>
       <h3>New Chat</h3>
       <div class="orange-divider"></div>
-    
+
       <div class="form-group">
         <label for="alias">Alias</label>
         <input id="alias" bind:value={newAlias} placeholder="johndoe" autocomplete="off" />
@@ -106,19 +104,20 @@
   {/if}
 
   <div class="seperation"></div>
-  
+
   <div class="chat-list">
     {#if $chatStore.length === 0}
       <div class="empty-text">No chats yet.</div>
     {/if}
 
-    {#each $chatStore as chat}
-      <button 
-        class="chat-item" 
+    {#each $chatStore as chat (chat.chat_id)}
+      <button
+        class="chat-item"
         class:active={chat.chat_id === $activeChat?.chat_id}
-        on:click={() => $activeChat = chat} >
+        on:click={() => ($activeChat = chat)}
+      >
         <span class="alias">{chat.is_group ? chat.title : chat.display_name}</span>
-        
+
         {#if chat.last_message && chat.last_message.status === 'INCOMING_UNREAD'}
           <span class="unread-dot"></span>
         {/if}
@@ -133,12 +132,12 @@
     width: 20%;
     display: flex;
     flex-direction: column;
-    background-color: var(--color-bg-panel); 
+    background-color: var(--color-bg-panel);
     border-right: 2px solid var(--color-text-dark);
     flex-shrink: 0;
     height: 100%;
   }
-  
+
   .header {
     background-color: var(--color-secondary);
     display: flex;
@@ -150,9 +149,9 @@
   .header-actions {
     display: flex;
     align-items: right;
-    gap: 0.8rem; 
+    gap: 0.8rem;
     margin-right: 1rem;
-    height: 100%; 
+    height: 100%;
   }
 
   .account {
@@ -163,10 +162,10 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    height: 100%; 
+    height: 100%;
   }
 
-  .account img{
+  .account img {
     height: 60%;
     max-height: 100%;
     width: auto;
@@ -176,7 +175,7 @@
   .add-btn {
     background: transparent;
   }
-  
+
   .account-info-modal {
     position: absolute;
     top: 50px;
@@ -276,7 +275,7 @@
     font-size: 1rem;
     cursor: pointer;
     margin-top: 0.5rem;
-  } 
+  }
 
   .seperation {
     height: 1%;
@@ -300,12 +299,12 @@
   }
 
   .chat-item:hover {
-    transform: none; 
-    filter: brightness(0.90); /* Just slightly darkens it on hover */
+    transform: none;
+    filter: brightness(0.9); /* Just slightly darkens it on hover */
   }
-  
+
   .chat-item.active {
-    background-color: var(--color-secondary); 
+    background-color: var(--color-secondary);
     color: var(--color-text-light);
   }
 
@@ -314,7 +313,7 @@
     height: 12px;
     background-color: var(--color-primary);
     border-radius: 50%;
-    
+
     /* Absolute positioning to pin it to the right side of the button */
     position: absolute;
     right: 1.5rem; /* Keeps it perfectly aligned on the right edge */

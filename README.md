@@ -6,17 +6,18 @@ This project is a desktop chat application built using a **Web-Hybrid Architectu
 
 We use a "Two-Headed" structure where the UI and the System logic run in separate processes:
 
-* **Frontend (The Renderer):** Built with **SvelteKit** + **Vite**.
-    * *Location:* `src/`
-    * *Role:* Handles all UI, Chat Logic, and State Management.
-* **Backend (The Main Process):** Built with **Electron** (Node.js).
-    * *Location:* `electron.js` (Root)
-    * *Role:* Creates the OS window, handles system menus, and manages the application lifecycle.
+- **Frontend (The Renderer):** Built with **SvelteKit** + **Vite**.
+  - _Location:_ `src/`
+  - _Role:_ Handles all UI, Chat Logic, and State Management.
+- **Backend (The Main Process):** Built with **Electron** (Node.js).
+  - _Location:_ `electron.js` (Root)
+  - _Role:_ Creates the OS window, handles system menus, and manages the application lifecycle.
 
 **Tools Used:**
-* **Concurrent.ly:** Runs the Vite server and Electron process simultaneously.
-* **Wait-on:** Ensures Electron doesn't launch until Vite is ready.
-* **Cross-env:** Sets environment variables (like `NODE_ENV`) across Windows/Linux/Mac.
+
+- **Concurrent.ly:** Runs the Vite server and Electron process simultaneously.
+- **Wait-on:** Ensures Electron doesn't launch until Vite is ready.
+- **Cross-env:** Sets environment variables (like `NODE_ENV`) across Windows/Linux/Mac.
 
 ---
 
@@ -26,12 +27,11 @@ Follow these steps to set up a fresh environment.
 
 ### 1. System Prerequisites
 
-* **Node.js (v20+):** [Download Here](https://nodejs.org/)
-* **OS Specifics:**
-    * **Windows:** No special requirements.
-    * **macOS:** Xcode Command Line Tools (`xcode-select --install`).
-    * **Linux / WSL (Ubuntu):** You **must** install the GUI libraries required by Electron. Run this command:
-
+- **Node.js (v20+):** [Download Here](https://nodejs.org/)
+- **OS Specifics:**
+  - **Windows:** No special requirements.
+  - **macOS:** Xcode Command Line Tools (`xcode-select --install`).
+  - **Linux / WSL (Ubuntu):** You **must** install the GUI libraries required by Electron. Run this command:
 
 ### 2. Installation
 
@@ -51,7 +51,7 @@ Start the development environment. This will launch the Vite local server and op
 npm run dev
 ```
 
-* **Hot Reloading:** Saving any file in `src/` will instantly update the running app window.
+- **Hot Reloading:** Saving any file in `src/` will instantly update the running app window.
 
 ---
 
@@ -60,12 +60,14 @@ npm run dev
 If `npm run dev` fails on a fresh setup, check these common environment issues:
 
 **1. "Error loading shared libraries: libnspr4.so" (Linux/WSL)**
-* **Cause:** Your Linux environment is missing the desktop GUI dependencies.
-* **Fix:** Run the `sudo apt-get install...` command listed in the Prerequisites section.
+
+- **Cause:** Your Linux environment is missing the desktop GUI dependencies.
+- **Fix:** Run the `sudo apt-get install...` command listed in the Prerequisites section.
 
 **2. Black Screen or "DRI3 / libEGL" Errors**
-* **Cause:** Your graphics drivers (WSLg) are failing to initialize hardware acceleration.
-* **Fix:** Force the app to use software rendering:
-    ```bash
-    LIBGL_ALWAYS_SOFTWARE=1 npm run dev
-    ```
+
+- **Cause:** Your graphics drivers (WSLg) are failing to initialize hardware acceleration.
+- **Fix:** Force the app to use software rendering:
+  ```bash
+  LIBGL_ALWAYS_SOFTWARE=1 npm run dev
+  ```

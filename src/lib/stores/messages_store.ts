@@ -24,15 +24,15 @@ function createMessageStore() {
     // Push a new message to the screen instantly
     addMessage: (message: Message) =>
       update((messages) => {
-        if (messages.find(m => m.id === message.id)) {
-                return messages;
+        if (messages.find((m) => m.id === message.id)) {
+          return messages;
         }
         return [...messages, message];
       }),
 
     updateMessageAfterSend: (oldId: number, messageId: number, status: MessageStatus) =>
       update((messages) => {
-        let message = messages.find(m => m.id === oldId);
+        const message = messages.find((m) => m.id === oldId);
         if (message) {
           message.id = messageId;
           message.status = status;
@@ -55,7 +55,7 @@ function createMessageStore() {
         return messages.filter((m) => m.id !== message.id);
       }),
 
-    reset: () => set([]),
+    reset: () => set([])
   };
 }
 
