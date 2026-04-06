@@ -23,6 +23,6 @@ export async function onAddChat(alias: string, onionAddress: string) {
     }
   } catch (error) {
     console.error('Fehler beim Hinzufügen des Kontakts:', error);
-    alert('Kontakt konnte nicht hinzugefügt werden.');
+    alert(`Kontakt konnte nicht hinzugefügt werden. \n${error}`);
   }
 }
