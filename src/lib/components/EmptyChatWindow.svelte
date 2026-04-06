@@ -16,7 +16,7 @@
     height: 100%;
     width: 100%;
     /* Flex-grow ensures it takes up the remaining 80% of the screen next to the ChatBar */
-    flex-grow: 1; 
+    flex-grow: 1;
   }
 
   .header {

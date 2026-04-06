@@ -4,7 +4,7 @@
   import { onDestroy, onMount } from 'svelte';
   import { loadChats, sync } from './chats_wrapper';
   import { activeChat } from '$lib/stores/active_chat_store';
-    import EmptyChatWindow from './EmptyChatWindow.svelte';
+  import EmptyChatWindow from './EmptyChatWindow.svelte';
 
   let pollingTimer: ReturnType<typeof setTimeout>;
   let isPolling = false;
