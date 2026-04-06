@@ -98,7 +98,7 @@
 
       <div class="form-group">
         <label for="alias">Alias</label>
-        <input id="alias" bind:value={newAlias} placeholder="johndoe" autocomplete="off" />
+        <input id="alias" bind:value={newAlias} on:keydown={handleKeydown} placeholder="johndoe" autocomplete="off" />
       </div>
 
       <div class="form-group">
