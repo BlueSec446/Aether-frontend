@@ -30,6 +30,6 @@ jobs:
 
       - name: Lint with ESLint & Prettier
         run: npm run lint
-        
+
       - name: Run Frontend Tests (vitest)
         run: npm run test
