@@ -12,7 +12,8 @@ export default defineConfig({
   },
   server: {
     host: true,
-    port: 5173,
+    port: process.env.FRONTEND_PORT ? parseInt(process.env.FRONTEND_PORT) : 5173,
+    strictPort: true,
 
     watch: {
       usePolling: true,
@@ -21,7 +22,8 @@ export default defineConfig({
 
     hmr: {
       host: 'localhost',
-      protocol: 'ws'
+      protocol: 'ws',
+      clientPort: process.env.FRONTEND_PORT ? parseInt(process.env.FRONTEND_PORT) : 5173
     }
   }
 });
