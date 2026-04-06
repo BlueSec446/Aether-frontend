@@ -2,7 +2,7 @@
   import ChatBar from '$lib/components/ChatBar.svelte';
   import ChatWindow from '$lib/components/ChatWindow.svelte';
   import { onDestroy, onMount } from 'svelte';
-  import { loadChats, sync } from './chats_wrapper';
+  import { loadChats, sync } from '../controllers/chats_wrapper';
   import { activeChat } from '$lib/stores/active_chat_store';
   import EmptyChatWindow from './EmptyChatWindow.svelte';
 

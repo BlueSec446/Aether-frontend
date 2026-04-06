@@ -2,7 +2,7 @@
   import { activeChat } from '$lib/stores/active_chat_store';
   import { userStore } from '$lib/stores/user_store';
   import { chatStore } from '$lib/stores/chat_store';
-  import { onAddChat } from './chat_bar';
+  import { onAddChat } from '../controllers/chat_bar';
 
   // User Account Information
   let isAccountModalOpen = false;

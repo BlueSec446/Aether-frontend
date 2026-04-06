@@ -1,12 +1,12 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { render, cleanup } from '@testing-library/svelte';
 import ChatsPage from '../../routes/chats/+page.svelte';
-import { loadChats, sync } from './chats_wrapper';
+import { loadChats, sync } from '../controllers/chats_wrapper';
 import { activeChat, DEFAULT_CHAT } from '$lib/stores/active_chat_store';
 import type { Chat } from '$lib/interfaces/objects';
 
 // Mock the backend API wrapper functions
-vi.mock('./chats_wrapper', () => ({
+vi.mock('../controllers/chats_wrapper', () => ({
   loadChats: vi.fn(),
   sync: vi.fn().mockResolvedValue('mocked-timestamp')
 }));
