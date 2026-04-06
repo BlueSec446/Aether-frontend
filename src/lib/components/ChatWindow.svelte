@@ -1,7 +1,14 @@
 <script lang="ts">
   import { onMount, tick } from 'svelte';
   import type { Message } from '$lib/interfaces/objects';
-  import { clearChat, deleteContact, exportContent, loadChat, postMessage, updateAlias } from './chat_window';
+  import {
+    clearChat,
+    deleteContact,
+    exportContent,
+    loadChat,
+    postMessage,
+    updateAlias
+  } from './chat_window';
   import { messageStore } from '$lib/stores/messages_store';
   import { activeChat } from '$lib/stores/active_chat_store';
 
@@ -16,7 +23,7 @@
   let isLoading = false;
   let isMenuOpen = false; // Used to display the menu correctly
   let isAliasModalOpen = false; // To display change alias modal
-  let newAliasInput = "";
+  let newAliasInput = '';
   let isExportModalOpen = false;
   let exportPassword = '';
   let includeChatHistory = true;
@@ -102,14 +109,14 @@
   }
 
   function openAliasModal(event: MouseEvent) {
-      event.stopPropagation(); // Prevent the clickOutside from instantly firing
-      closeMenu();
-      isAliasModalOpen = true;
-    }
-  
-  function closeAliasModal(){
+    event.stopPropagation(); // Prevent the clickOutside from instantly firing
+    closeMenu();
+    isAliasModalOpen = true;
+  }
+
+  function closeAliasModal() {
     isAliasModalOpen = false;
-    newAliasInput = "";
+    newAliasInput = '';
   }
 
   function handleAliasKeydown(event: KeyboardEvent) {
@@ -119,14 +126,14 @@
     }
   }
 
-  async function submitAliasChange(){
+  async function submitAliasChange() {
     if (!newAliasInput.trim()) return;
 
     await updateAlias($activeChat.contact_ids[0].contact_id, newAliasInput);
     closeAliasModal();
   }
 
-function openExportModal(event: MouseEvent) {
+  function openExportModal(event: MouseEvent) {
     event.stopPropagation();
     closeMenu();
     isExportModalOpen = true;
@@ -186,10 +193,16 @@ function openExportModal(event: MouseEvent) {
       <div class="alias-modal" use:clickOutside={closeAliasModal}>
         <h3>Change Alias</h3>
         <div class="orange-divider"></div>
-      
+
         <div class="form-group">
           <label for="new-alias">New Alias</label>
-          <input id="new-alias" bind:value={newAliasInput} on:keydown={handleAliasKeydown} placeholder="Enter new name..." autocomplete="off" />
+          <input
+            id="new-alias"
+            bind:value={newAliasInput}
+            on:keydown={handleAliasKeydown}
+            placeholder="Enter new name..."
+            autocomplete="off"
+          />
         </div>
 
         <button class="submit-btn" on:click={submitAliasChange}>Save</button>
@@ -200,20 +213,21 @@ function openExportModal(event: MouseEvent) {
       <div class="alias-modal" use:clickOutside={closeExportModal}>
         <h3>Export Chat</h3>
         <div class="orange-divider"></div>
-      
+
         <div class="form-group">
           <label for="export-pw">Encryption Password</label>
-          <input 
-            id="export-pw" type="password" bind:value={exportPassword} on:keydown={handleExportKeydown} placeholder="Min. 8 characters..." autocomplete="new-password"
+          <input
+            id="export-pw"
+            type="password"
+            bind:value={exportPassword}
+            on:keydown={handleExportKeydown}
+            placeholder="Min. 8 characters..."
+            autocomplete="new-password"
           />
         </div>
 
         <div class="checkbox-group">
-          <input 
-            id="include-chats" 
-            type="checkbox" 
-            bind:checked={includeChatHistory} 
-          />
+          <input id="include-chats" type="checkbox" bind:checked={includeChatHistory} />
           <label for="include-chats">Include message history</label>
         </div>
 
@@ -469,7 +483,7 @@ function openExportModal(event: MouseEvent) {
     width: 100%;
     box-sizing: border-box;
   }
-  
+
   .empty-state {
     text-align: center;
     color: var(--color-text-light); /* Replaced white */

@@ -216,9 +216,11 @@ describe('Chat Window Controller', () => {
         file_path: '/downloads/backup.zip'
       });
 
-      const result = await exportContent('password123', true);
+      await exportContent('password123', true);
 
-      expect(window.alert).toHaveBeenCalledWith('The exported file is available at: \n/downloads/backup.zip');
+      expect(window.alert).toHaveBeenCalledWith(
+        'The exported file is available at: \n/downloads/backup.zip'
+      );
       expect(window.frontendAPI.export).toHaveBeenCalledWith('password123', true);
     });
 

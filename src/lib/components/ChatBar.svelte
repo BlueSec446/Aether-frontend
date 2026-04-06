@@ -98,12 +98,18 @@
 
       <div class="form-group">
         <label for="alias">Alias</label>
-        <input id="alias" bind:value={newAlias} placeholder="johndoe" autocomplete="off"/>
+        <input id="alias" bind:value={newAlias} placeholder="johndoe" autocomplete="off" />
       </div>
 
       <div class="form-group">
         <label for="onion">Onion Address</label>
-        <input id="onion" bind:value={newOnion} on:keydown={handleKeydown} placeholder="vww6yba..." autocomplete="off" />
+        <input
+          id="onion"
+          bind:value={newOnion}
+          on:keydown={handleKeydown}
+          placeholder="vww6yba..."
+          autocomplete="off"
+        />
       </div>
 
       <button class="submit-btn" on:click={submitNewChat}>Chat</button>
