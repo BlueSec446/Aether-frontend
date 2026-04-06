@@ -7,6 +7,9 @@
 
   onMount(async () => {
     await loadChat();
+    $messageStore.forEach((msg) => {
+      console.log(msg);
+    });
   });
 
   let inputText = '';
@@ -142,7 +145,7 @@
       </div>
     {/if}
 
-    {#each $messageStore as msg (msg.id)}
+    {#each $messageStore as msg}
       {#if msg.sender_contact_id === null}
         <div class="message user">
           <div class="bubble">

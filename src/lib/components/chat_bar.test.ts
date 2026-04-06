@@ -84,7 +84,9 @@ describe('Chat Bar - onAddChat', () => {
       'Fehler beim Hinzufügen des Kontakts:',
       mockError
     );
-    expect(alertMock).toHaveBeenCalledWith('Kontakt konnte nicht hinzugefügt werden. \nError: Tor Network Offline');
+    expect(alertMock).toHaveBeenCalledWith(
+      'Kontakt konnte nicht hinzugefügt werden. \nError: Tor Network Offline'
+    );
     expect(loadChats).not.toHaveBeenCalled();
   });
 });

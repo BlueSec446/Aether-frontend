@@ -44,5 +44,11 @@ export default [
     rules: {
       '@typescript-eslint/no-explicit-any': 'off'
     }
+  },
+  {
+    files: ['**/*.svelte'],
+    rules: {
+      'svelte/require-each-key': 'off'
+    }
   }
 ];
